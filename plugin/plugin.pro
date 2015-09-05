@@ -11,13 +11,15 @@ SOURCES += \
     plugin_plugin.cpp \
     chess.cpp \
     chessboardmodel.cpp \
-    piece.cpp
+    piece.cpp \
+    pawn.cpp
 
 HEADERS += \
     plugin_plugin.h \
     chess.h \
     chessboardmodel.h \
-    piece.h
+    piece.h \
+    pawn.h
 
 DISTFILES = qmldir
 

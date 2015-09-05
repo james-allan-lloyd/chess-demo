@@ -1,5 +1,6 @@
 #include "chessboardmodel.h"
 #include "piece.h"
+#include "pawn.h"
 
 
 ChessBoardModel::ChessBoardModel(QObject* parent)
@@ -45,8 +46,20 @@ bool ChessBoardModel::movePiece(int index, Piece* piece)
 
 Piece* ChessBoardModel::createPawn(int row, int col)
 {
-    Piece* piece = new Piece("Pawn", this);
-    piece->setIndex(row * 8 + col);
+    if(row < 0 || col < 0 || row >= 8 || col >= 8)
+    {
+        // qDebug() << "invalid position" << row << "," << col;
+        return NULL;
+    }
+    int index = row * 8 + col;
+    if(cells_[index] != NULL)
+    {
+        // return NULL if cell is already occupied
+        qDebug() << "cell occupied" << row << "," << col << (void*)cells_[index];
+        return NULL;
+    }
+    Piece* piece = new Pawn(this);
+    piece->setIndex(index);
     cells_[piece->index()] = piece;
     pieces_.insert(piece);
     return piece;
@@ -61,4 +74,5 @@ void ChessBoardModel::clearPieces()
         delete piece;
     }
     pieces_.clear();
+    cells_.fill(NULL);
 }

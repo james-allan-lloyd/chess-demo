@@ -2,15 +2,18 @@
 #define PIECE_H
 
 #include <QObject>
+#include <QPoint>
+#include <QQmlListProperty>
 
 
 class Piece : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QList<int> validMoves READ validMoves)
+    // Q_PROPERTY(QList<QPoint> validMoves READ validMoves)
+    Q_PROPERTY(QVariantList validMoves READ validMoves)
     Q_PROPERTY(int index READ index WRITE setIndex)
+    Q_PROPERTY(QPoint currentPosition READ currentPosition)
 
-    QList<int> validMoves_;
     int m_index;
 
 public:
@@ -18,23 +21,40 @@ public:
         : QObject(parent)
     {
         setObjectName(name);
-        validMoves_.append(63);
     }
 
-    QList<int> validMoves() const
-    {
-        return validMoves_;
-    }
+    virtual QVariantList validMoves() = 0;
+
+    Q_INVOKABLE virtual bool isValidMove(QPoint a) const = 0;
 
     int index() const
     {
         return m_index;
     }
 
+    QPoint currentPosition() const
+    {
+        return QPoint(m_index / 8, m_index % 8);
+    }
+
 public slots:
     void setIndex(int index)
     {
         m_index = index;
+    }
+
+    bool moveTo(QPoint p)
+    {
+        if(p.x() >= 8 || p.y() >= 8)
+        {
+            return false;
+        }
+        if(isValidMove(p))
+        {
+            setIndex(p.x() + p.y() * 8);
+            return true;
+        }
+        return false;
     }
 };
 
