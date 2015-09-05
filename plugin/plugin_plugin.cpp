@@ -5,7 +5,7 @@
 
 void PluginPlugin::registerTypes(const char *uri)
 {
-    // @uri com.mycompany.qmlcomponents
+    // @uri com.luxoft.Chess
     qmlRegisterType<Chess>(uri, 1, 0, "Chess");
 }
 

@@ -4,7 +4,7 @@ QT += qml quick
 CONFIG += qt plugin c++11
 
 TARGET = $$qtLibraryTarget($$TARGET)
-uri = com.mycompany.qmlcomponents
+uri = com.luxoft.Chess
 
 # Input
 SOURCES += \
@@ -32,3 +32,9 @@ unix {
     target.path = $$installPath
     INSTALLS += target qmldir
 }
+
+installPath = ../imports/$$replace(uri, \\., /)
+qmldir.path = $$installPath
+target.path = $$installPath
+
+INSTALLS += target qmldir
