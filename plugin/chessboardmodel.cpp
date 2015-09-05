@@ -42,3 +42,23 @@ bool ChessBoardModel::movePiece(int index, Piece* piece)
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));
     return true;
 }
+
+Piece* ChessBoardModel::createPawn(int row, int col)
+{
+    Piece* piece = new Piece("Pawn", this);
+    piece->setIndex(row * 8 + col);
+    cells_[piece->index()] = piece;
+    pieces_.insert(piece);
+    return piece;
+}
+
+
+void ChessBoardModel::clearPieces()
+{
+    foreach(Piece* piece, pieces_)
+    {
+        cells_[piece->index()] = NULL;
+        delete piece;
+    }
+    pieces_.clear();
+}

@@ -14,7 +14,7 @@ class ChessBoardModel : public QAbstractListModel
     Q_PROPERTY(int pieceCount READ pieceCount NOTIFY pieceCountChanged)
 
     QVector<QObject*> cells_;
-    QList<Piece*> pieces_;
+    QSet<Piece*> pieces_;
 public:
     enum PieceRoles {
         ValidMoves = Qt::UserRole + 1,
@@ -30,6 +30,8 @@ public:
 
     int pieceCount() const { return pieces_.size(); }
     Q_INVOKABLE bool movePiece(int index, Piece* piece);
+    Q_INVOKABLE Piece* createPawn(int row, int col);
+    Q_INVOKABLE void clearPieces();
 
 signals:
     void pieceCountChanged(int newPieceCount);
