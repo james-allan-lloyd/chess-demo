@@ -9,11 +9,15 @@ uri = com.luxoft.Chess
 # Input
 SOURCES += \
     plugin_plugin.cpp \
-    chess.cpp
+    chess.cpp \
+    chessboardmodel.cpp \
+    piece.cpp
 
 HEADERS += \
     plugin_plugin.h \
-    chess.h
+    chess.h \
+    chessboardmodel.h \
+    piece.h
 
 DISTFILES = qmldir
 
