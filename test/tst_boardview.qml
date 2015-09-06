@@ -26,6 +26,7 @@ Rectangle {
         function init()
         {
             model.clearPieces()
+            view.resetTurns()
         }
 
         function test_createdPieceIsDisplayed()
@@ -34,14 +35,20 @@ Rectangle {
             compare(view.cells.itemAt(0).label, "Pawn")
         }
 
+        function comparePoint(actual, expected)
+        {
+            compare(actual.x, expected.x)
+            compare(actual.y, expected.y)
+        }
+
         function test_movePiece()
         {
-            var pawn = model.createPawn(0, 0)
+            var pawn = model.createPawn(0, 7, Chess.BoardModel.WHITE)
             // mouseClick(view.cell(0, 0))
-            mouseClick(view.cell(0, 0), 5, 5)
+            mouseClick(view.cell(0, 7), 5, 5)
             compare(view.selectedPiece, pawn, "Pawn is selected")
-            mouseClick(view.cell(0, 1), 5, 5)
-            verify(pawn.currentPosition === Qt.point(0, 1), "Pawn has correct position")
+            mouseClick(view.cell(0, 6), 5, 5)
+            comparePoint(pawn.currentPosition, Qt.point(0, 6), "Pawn has correct position")
             compare(view.selectedPiece, null, "Pawn is no longer selected")
         }
 
@@ -54,16 +61,10 @@ Rectangle {
             verify(!view.cell(-8, -8))
         }
 
-        function comparePoint(actual, expected)
-        {
-            compare(actual.x, expected.x)
-            compare(actual.y, expected.y)
-        }
-
         function test_movingPieceToInvalidPosition()
         {
             var invalidPosition = Qt.point(7, 7)
-            var pawn = model.createPawn(0, 0)
+            var pawn = model.createPawn(0, 0, Chess.BoardModel.WHITE)
             mouseClick(view.cell(0, 0), 5, 5)
             compare(view.selectedPiece, pawn, "Pawn is selected")
             mouseClick(view.cell(invalidPosition.x, invalidPosition.y), 5, 5)
@@ -73,14 +74,14 @@ Rectangle {
 
         function test_validMovesAreDisplayed()
         {
-            var pawn = model.createPawn(0, 0)
-            mouseClick(view.cell(0, 0), 5, 5)
+            var pawn = model.createPawn(0, 7, Chess.BoardModel.WHITE)
+            mouseClick(view.cell(0, 7), 5, 5)
 
-            verify(pawn.isValidMove(Qt.point(0,1)), "Pawn can move 1")
-            verify(pawn.isValidMove(Qt.point(0,2)), "Pawn can move 2 (on first move)")
+            verify(pawn.isValidMove(Qt.point(0,6)), "Pawn can move 1")
+            verify(pawn.isValidMove(Qt.point(0,5)), "Pawn can move 2 (on first move)")
 
-            verify(view.cell(0,1).validMoveDisplay.visible)
-            verify(view.cell(0,2).validMoveDisplay.visible)
+            verify(view.cell(0,6).validMoveDisplay.visible)
+            verify(view.cell(0,5).validMoveDisplay.visible)
         }
 
 
@@ -91,6 +92,53 @@ Rectangle {
 
             verify(Qt.colorEqual(view.cell(0,0).labelColor, "black"))
             verify(Qt.colorEqual(view.cell(0,7).labelColor, "white"))
+        }
+
+
+        function test_whiteStartsFirst()
+        {
+            compare(view.currentPlayer, "white");
+        }
+
+        function test_movingOtherPlayersPiecesNotAllowed()
+        {
+            compare(view.currentPlayer, "white");
+
+            var blackPawn = model.createPawn(0,0, Chess.BoardModel.BLACK)
+            var whitePawn = model.createPawn(0,7, Chess.BoardModel.WHITE)
+
+            mouseClick(view.cell(0, 0), 5, 5)
+            compare(view.selectedPiece, null)
+
+            mouseClick(view.cell(0, 7), 5, 5)
+            compare(view.selectedPiece, whitePawn)
+        }
+
+
+        function test_movingPieceEndsTurn()
+        {
+            compare(view.currentPlayer, "white");
+
+            var blackPawn = model.createPawn(0,0, Chess.BoardModel.BLACK)
+            var whitePawn = model.createPawn(0,7, Chess.BoardModel.WHITE)
+
+            mouseClick(view.cell(0,7), 5, 5)
+            compare(view.selectedPiece, whitePawn)
+            mouseClick(view.cell(0,6), 5, 5)
+            comparePoint(whitePawn.currentPosition, Qt.point(0,6))
+
+            compare(view.currentPlayer, "black");
+            mouseClick(view.cell(0,0), 5, 5)
+            compare(view.selectedPiece, blackPawn)
+            mouseClick(view.cell(0,0), 5, 5) // invalid move
+            compare(view.currentPlayer, "black");
+
+            mouseClick(view.cell(0,0), 5, 5)
+            compare(view.selectedPiece, blackPawn)
+            mouseClick(view.cell(0,1), 5, 5) // valid move
+            comparePoint(blackPawn.currentPosition, Qt.point(0,1))
+
+            compare(view.currentPlayer, "white");
         }
     }
 }

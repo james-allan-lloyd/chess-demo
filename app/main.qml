@@ -25,7 +25,7 @@ Window {
         boardModel.createPawn(4, 0, Chess.BoardModel.BLACK)
         boardModel.createPawn(4, 7, Chess.BoardModel.WHITE)
         boardModel.createPawn(0, 0, Chess.BoardModel.BLACK)
-        boardModel.createPawn(1, 1, Chess.BoardModel.WHITE)
+        boardModel.createPawn(1, 1, Chess.BoardModel.BLACK)
     }
 
     Text {
@@ -33,7 +33,15 @@ Window {
         text: boardView.selectedPiece ? "Selected: " + boardView.selectedPiece.objectName : "Select piece"
         width: 50
         height: 20
+        anchors.left: parent.left
         anchors.bottom: parent.bottom
+    }
+
+    Text {
+        id: currentPlayer
+        text: boardView.currentPlayer
+        anchors.right: parent.right
+        anchors.top: parent.top
     }
 
     Rectangle {

@@ -151,6 +151,9 @@ TestCase {
 
     function test_pawnsCantTakeAllyPieces()
     {
+        var blackPawn1 = board.createPawn(0, 0, Chess.BoardModel.BLACK)
+        var blackPawn2 = board.createPawn(1, 1, Chess.BoardModel.BLACK)
 
+        verify(!blackPawn1.isValidMove(Qt.point(1, 1)), "Black pawn will not attack other black pawn")
     }
 }

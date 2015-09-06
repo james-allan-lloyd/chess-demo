@@ -9,6 +9,7 @@ Rectangle {
     property var model: null
     property var cells: cells
     property var selectedPiece: null
+    property string currentPlayer: "white"
     color: "red"  // Debugging size
 
     Grid {
@@ -68,16 +69,27 @@ Rectangle {
                         {
                             if(modelData)
                             {
-                                boardview.selectedPiece = modelData
-                            }
-                            else
-                            {
-                                boardview.selectedPiece = null
+                                if((modelData.isBlack && currentPlayer == "black")
+                                  || (modelData.isWhite && currentPlayer == "white"))
+                                {
+                                    boardview.selectedPiece = modelData
+                                }
                             }
                         }
                         else
                         {
-                            boardview.selectedPiece.moveTo(Qt.point(cellX, cellY));
+                            if(boardview.selectedPiece.moveTo(Qt.point(cellX, cellY)))
+                            {
+                                if(currentPlayer == "white")
+                                {
+                                    currentPlayer = "black"
+                                }
+                                else
+                                {
+                                    currentPlayer = "white"
+                                }
+                            }
+
                             boardview.selectedPiece = null
                         }
                     }
@@ -91,5 +103,11 @@ Rectangle {
     {
         // Don't need range checking because JS will give you null or undefined anyway.
         return cells.itemAt(x + y * columns)
+    }
+
+
+    function resetTurns()
+    {
+        currentPlayer = "white"
     }
 }

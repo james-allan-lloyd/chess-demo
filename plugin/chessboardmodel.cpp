@@ -86,6 +86,7 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
     Q_ASSERT(targetPiece != piece);
     if(targetPiece)
     {
+        Q_ASSERT(targetPiece->color() != piece->color());
         removePiece(targetPiece);
         targetPiece = NULL; // deleted
     }

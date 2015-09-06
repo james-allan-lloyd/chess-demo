@@ -36,7 +36,7 @@ bool Pawn::isValidMove(QPoint a) const
     if(currentPosition() + QPoint(1,direction*1) == a || currentPosition() + QPoint(-1,direction*1) == a)
     {
         // diagonal attack
-        return board()->cell(a) != NULL;
+        return board()->cell(a) != NULL && board()->cell(a)->color() != color();
         // return true;
     }
 
