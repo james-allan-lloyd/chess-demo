@@ -109,4 +109,5 @@ TestCase {
         board.createPawn(4,4)
         compare(initialValue + 1, dataChangedSpy.count)
     }
+
 }

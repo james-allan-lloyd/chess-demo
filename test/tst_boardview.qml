@@ -38,9 +38,30 @@ Rectangle {
         {
             var pawn = model.createPawn(0, 0)
             mouseClick(view.cells.itemAt(0), 5, 5)
+            compare(view.selectedPiece, pawn, "Pawn is selected")
             mouseClick(view.cells.itemAt(8), 5, 5)
             verify(pawn.currentPosition === Qt.point(0, 1), "Pawn has correct position")
+            compare(view.selectedPiece, null, "Pawn is no longer selected")
         }
+
+
+        function test_gettingCell()
+        {
+            verify(view.cell(0, 0))
+            verify(view.cell(7, 7))
+            verify(!view.cell(8, 8))
+            verify(!view.cell(-8, -8))
+        }
+
+        // function test_movingPieceToInvalidPosition()
+        // {
+        //     var pawn = model.createPawn(0, 0)
+        //     mouseClick(view.cells.itemAt(0), 5, 5)
+        //     compare(view.selectedPiece, pawn, "Pawn is selected")
+        //     mouseClick(view.cells.itemAt(8), 5, 5)
+        //     verify(pawn.currentPosition === Qt.point(0, 1), "Pawn has correct position")
+        //     compare(view.selectedPiece, null, "Pawn is no longer selected")
+        // }
     }
 }
 
