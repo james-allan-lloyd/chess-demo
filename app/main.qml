@@ -25,6 +25,14 @@ Window {
         boardModel.createPawn(0,0)
     }
 
+    Text {
+        id: currentPiece
+        text: boardView.selectedPiece ? "Selected: " + boardView.selectedPiece.objectName : "Select piece"
+        width: 50
+        height: 20
+        anchors.bottom: parent.bottom
+    }
+
     Rectangle {
         id: startButton
         color: "grey"

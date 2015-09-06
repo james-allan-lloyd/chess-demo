@@ -20,6 +20,7 @@ Rectangle {
             id: cells
             model: boardview.model ? boardview.model : boardview.rows * boardview.columns
             Rectangle {
+                property var validMoveDisplay: validMoveDisplay
                 width: boardview.cellSize
                 height: boardview.cellSize
                 property int cellX: index % 8
@@ -31,6 +32,12 @@ Rectangle {
                     visible: modelData
                 }
 
+                Rectangle {
+                    id: validMoveDisplay
+                    anchors.fill: parent
+                    color: "yellow"
+                    visible: boardview.selectedPiece ? boardview.selectedPiece.isValidMove(Qt.point(cellX, cellY)) : false
+                }
 
                 MouseArea {
                     anchors.fill: parent

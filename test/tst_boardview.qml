@@ -69,6 +69,19 @@ Rectangle {
             mouseClick(view.cell(invalidPosition.x, invalidPosition.y), 5, 5)
             comparePoint(pawn.currentPosition, Qt.point(0,0), "Pawn has not moved")
         }
+
+
+        function test_validMovesAreDisplayed()
+        {
+            var pawn = model.createPawn(0, 0)
+            mouseClick(view.cell(0, 0), 5, 5)
+
+            verify(pawn.isValidMove(Qt.point(0,1)), "Pawn can move 1")
+            verify(pawn.isValidMove(Qt.point(0,2)), "Pawn can move 2 (on first move)")
+
+            verify(view.cell(0,1).validMoveDisplay.visible)
+            verify(view.cell(0,2).validMoveDisplay.visible)
+        }
     }
 }
 
