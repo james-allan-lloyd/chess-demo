@@ -26,7 +26,7 @@ Window {
         boardModel.createPawn(4, 7, Chess.BoardModel.WHITE)
         boardModel.createPawn(0, 0, Chess.BoardModel.BLACK)
         boardModel.createPawn(1, 1, Chess.BoardModel.BLACK)
-        boardModel.create("Queen", 4, 4, Chess.BoardModel.WHITE)
+        boardModel.create("Queen", 6, 4, Chess.BoardModel.WHITE)
     }
 
     Text {

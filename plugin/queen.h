@@ -22,6 +22,9 @@ public:
 
 protected:
     void positionUpdated() override;
+
+private:
+    void addRow(int xStep, int yStep);
 };
 
 #endif // QUEEN_H

@@ -83,7 +83,6 @@ public slots:
         if(result)
         {
             hasMoved_ = true;
-            positionUpdated();
         }
         return result;
     }
@@ -99,7 +98,7 @@ public slots:
 
 protected:
     // FIXME: make pure rather than empty
-    virtual void positionUpdated() {}
+    virtual void positionUpdated();
 
 signals:
     // not really needed, but qml complains
