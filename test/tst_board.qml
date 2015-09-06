@@ -28,6 +28,14 @@ TestCase {
         compare(board.pieceCount, 0)
     }
 
+
+    function test_creatingAnInvalidTypeOfPiece()
+    {
+        var result = board.create("NOT_A_PIECE", 0, 0)
+        compare(result, null, "No piece returned")
+        compare(board.pieceCount, 0, "No pieces created")
+    }
+
     function test_itStartsWithAnEmptyBoard() {
         var initial = dataChangedSpy.count;
         board.clearPieces()

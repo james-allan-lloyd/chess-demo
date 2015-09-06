@@ -5,6 +5,7 @@
 #include <QPoint>
 #include <QQmlListProperty>
 #include <QDebug>
+#include <functional>
 
 class Piece;
 
@@ -15,6 +16,9 @@ class ChessBoardModel : public QAbstractListModel
 
     QVector<Piece*> cells_;
     QSet<Piece*> pieces_;
+
+    typedef std::function<Piece*()> FactoryFunction;
+    QMap<QString, FactoryFunction> pieceFactory_;
 public:
     enum PieceRoles {
         ValidMoves = Qt::UserRole + 1,
@@ -49,7 +53,8 @@ public:
 
     int pieceCount() const { return pieces_.size(); }
     bool movePiece(Piece* piece, QPoint position);
-    Q_INVOKABLE Piece* createPawn(int row, int col, PieceColor color = BLACK);
+    Q_INVOKABLE Piece* createPawn(int x, int y, PieceColor color = BLACK);
+    Q_INVOKABLE Piece* create(QString name, int x, int y, PieceColor color = BLACK);
     Q_INVOKABLE void clearPieces();
 
 signals:

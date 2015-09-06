@@ -31,6 +31,7 @@ Rectangle {
 
         function cleanupTestCase()
         {
+            mainWindow.visible = false
         }
 
         function test_createdPieceIsDisplayed()

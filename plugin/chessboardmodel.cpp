@@ -1,6 +1,7 @@
 #include "chessboardmodel.h"
 #include "piece.h"
 #include "pawn.h"
+#include "queen.h"
 
 
 ChessBoardModel::ChessBoardModel(QObject* parent)
@@ -8,6 +9,8 @@ ChessBoardModel::ChessBoardModel(QObject* parent)
     , cells_(64, NULL)
 {
     // cells_[0] = new Piece("Pawn");
+    pieceFactory_["queen"] = [this]() -> Piece* { return new Queen(this); };
+    pieceFactory_["pawn"] = [this]() -> Piece* { return new Pawn(this); };
 }
 
 ChessBoardModel::~ChessBoardModel()
@@ -96,7 +99,7 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
     emit dataChanged(createIndex(piece->index(), 0), createIndex(piece->index(), 0));
 
     cells_[index] = piece;
-    piece->setIndex(index);
+    piece->setPosition(position);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));
     return true;
 }
@@ -116,7 +119,34 @@ Piece* ChessBoardModel::createPawn(int x, int y, PieceColor color)
     }
     Piece* piece = new Pawn(this);
     piece->setColor(color);
-    piece->setIndex(index);
+    piece->setPosition(QPoint(x, y));
+    cells_[piece->index()] = piece;
+    pieces_.insert(piece);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0));
+    return piece;
+}
+
+Piece* ChessBoardModel::create(QString name, int x, int y, ChessBoardModel::PieceColor color)
+{
+    if(x < 0 || y < 0 || x >= 8 || y >= 8)
+    {
+        return NULL;
+    }
+    if(!pieceFactory_.contains(name.toLower()))
+    {
+        // unknown key type
+        return NULL;
+    }
+    int index = x + y * 8;
+    if(cells_[index] != NULL)
+    {
+        // return NULL if cell is already occupied
+        // qDebug() << "cell occupied" << x << "," << y << (void*)cells_[index];
+        return NULL;
+    }
+    Piece* piece = pieceFactory_.value(name.toLower())();
+    piece->setColor(color);
+    piece->setPosition(QPoint(x,y));
     cells_[piece->index()] = piece;
     pieces_.insert(piece);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));

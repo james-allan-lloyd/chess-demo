@@ -4,14 +4,6 @@
 Pawn::Pawn(ChessBoardModel* parent)
     : Piece("Pawn", parent)
 {
-    result.append(QPoint(1, 0));
-}
-
-QVariantList Pawn::validMoves()
-{
-    QVariantList result;
-    result.push_back(QPoint(1, 0));
-    return result;
 }
 
 

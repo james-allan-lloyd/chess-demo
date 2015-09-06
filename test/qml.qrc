@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>tst_pawn.qml</file>
+        <file>tst_queen.qml</file>
     </qresource>
 </RCC>

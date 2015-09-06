@@ -11,19 +11,18 @@
 class Piece : public QObject
 {
     Q_OBJECT
-    // Q_PROPERTY(QList<QPoint> validMoves READ validMoves)
-    Q_PROPERTY(QVariantList validMoves READ validMoves)
-    Q_PROPERTY(int index READ index WRITE setIndex)
+    // Q_PROPERTY(int index READ index WRITE setIndex)
     Q_PROPERTY(bool isBlack READ isBlack NOTIFY colorChanged)
     Q_PROPERTY(bool isWhite READ isWhite NOTIFY colorChanged)
     Q_PROPERTY(QPoint currentPosition READ currentPosition)
     Q_PROPERTY(ChessBoardModel::PieceColor color READ color WRITE setColor NOTIFY colorChanged)
 
     ChessBoardModel* board_;
-    int m_index;
+    // int m_index;
     bool hasMoved_;
 
     ChessBoardModel::PieceColor color_;
+    QPoint position_;
 
 public:
     Piece(QString name, ChessBoardModel* board)
@@ -35,18 +34,22 @@ public:
         setObjectName(name);
     }
 
-    virtual QVariantList validMoves() = 0;
-
     Q_INVOKABLE virtual bool isValidMove(QPoint a) const = 0;
 
     int index() const
     {
-        return m_index;
+        return position_.x() + position_.y() * 8;
     }
 
     QPoint currentPosition() const
     {
-        return QPoint(m_index % 8, m_index / 8);
+        return position_;
+    }
+
+    void setPosition(const QPoint& p)
+    {
+        position_ = p;
+        positionUpdated();
     }
 
     int hasMoved() const { return hasMoved_; }
@@ -69,10 +72,10 @@ public:
     }
 
 public slots:
-    void setIndex(int index)
-    {
-        m_index = index;
-    }
+    // void setIndex(int index)
+    // {
+    //     m_index = index;
+    // }
 
     bool moveTo(QPoint p)
     {
@@ -80,6 +83,7 @@ public slots:
         if(result)
         {
             hasMoved_ = true;
+            positionUpdated();
         }
         return result;
     }
@@ -92,6 +96,10 @@ public slots:
             emit colorChanged(color_);
         }
     }
+
+protected:
+    // FIXME: make pure rather than empty
+    virtual void positionUpdated() {}
 
 signals:
     // not really needed, but qml complains
