@@ -4,5 +4,6 @@
         <file>tst_queen.qml</file>
         <file>tst_rook.qml</file>
         <file>tst_bishop.qml</file>
+        <file>tst_knight.qml</file>
     </qresource>
 </RCC>
