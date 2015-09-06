@@ -3,21 +3,44 @@ import QtQuick.Window 2.2
 import QtTest 1.0
 import com.luxoft.Chess 1.0 as Chess
 
-Item {
+Rectangle {
     id: mainWindow
     visible: true
-    width: 500; height: 500
+    width: 500;
+    height: 500
+
+    Chess.BoardModel
+    {
+        id: model
+    }
 
     Chess.BoardView {
         id: view
-            // Chess.BoardModel
-            // {
-            //     id: model
-            // }
+        model: model
+        anchors.centerIn: parent
     }
 
     TestCase {
+        when: windowShown
 
+        function init()
+        {
+            model.clearPieces()
+        }
+
+        function test_createdPieceIsDisplayed()
+        {
+            model.createPawn(0, 0)
+            compare(view.cells.itemAt(0).label, "Pawn")
+        }
+
+        function test_movePiece()
+        {
+            var pawn = model.createPawn(0, 0)
+            mouseClick(view.cells.itemAt(0), 5, 5)
+            mouseClick(view.cells.itemAt(8), 5, 5)
+            verify(pawn.currentPosition === Qt.point(0, 1), "Pawn has correct position")
+        }
     }
 }
 

@@ -19,17 +19,30 @@ Window {
         anchors.centerIn: parent
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onClicked: {
-            console.log("Create pawn")
-            boardModel.createPawn(0,0)
+    function setupBoard()
+    {
+        boardModel.clearPieces()
+        boardModel.createPawn(0,0)
+    }
+
+    Rectangle {
+        id: startButton
+        color: "grey"
+        width: 50
+        height: 20
+
+        Text {
+            id: buttonLabel
+            anchors.centerIn: parent
+            text: "Start"
+        }
+
+        MouseArea {
+            id: buttonMouseArea
+            anchors.fill: parent
+            onClicked: setupBoard()
         }
     }
 
-    // Text {
-    //     text: qsTr("Hello World")
-    //     anchors.centerIn: parent
-    // }
 }
 
