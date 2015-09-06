@@ -29,6 +29,10 @@ Rectangle {
             view.resetTurns()
         }
 
+        function cleanupTestCase()
+        {
+        }
+
         function test_createdPieceIsDisplayed()
         {
             model.createPawn(0, 0)

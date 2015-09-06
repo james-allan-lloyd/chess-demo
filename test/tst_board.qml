@@ -5,7 +5,6 @@ import com.luxoft.Chess 1.0 as Chess
 TestCase {
     id: root
     name: "BoardTests"
-    property var board;
 
     Chess.BoardModel {
         id: board
@@ -60,24 +59,6 @@ TestCase {
     }
 
 
-    function test_pawnsActuallyMovesForward() {
-        var pawn = board.createPawn(0, 0)
-        verify(pawn.moveTo(Qt.point(0,1)), "Pawn should move forward")
-        verify(!pawn.moveTo(Qt.point(1,1)), "Pawn should not move diagnally without opponent piece")
-        compare(pawn.currentPosition, Qt.point(0,1), "Pawn is in the correct position")
-    }
-
-    function test_pawnDoesNotMoveOffBoard()
-    {
-        var pawn = board.createPawn(0, 7)
-        verify(!pawn.isValidMove(Qt.point(0,8)))
-        verify(!pawn.moveTo(Qt.point(0,8)))
-        compare(pawn.currentPosition, Qt.point(0,7))
-
-        var pawn = board.createPawn(0, 0)
-        verify(!pawn.moveTo(pawn, Qt.point(0,-1)))
-    }
-
     function test_cannotCreatePawnsOutsideBoard()
     {
         verify(!board.createPawn(8,0))
@@ -93,16 +74,6 @@ TestCase {
     }
 
 
-    function test_pawnCanMoveTwoOnFirstTurnButNotAfter()
-    {
-        var pawn = board.createPawn(0, 0)
-        verify(pawn.isValidMove(Qt.point(0,2)))
-        verify(pawn.moveTo(Qt.point(0,2)));
-        compare(pawn.currentPosition, Qt.point(0,2));
-
-        verify(pawn.isValidMove(Qt.point(0,3)), "Pawn should be able to move one after first move");
-        verify(!pawn.isValidMove(Qt.point(0,4)), "Pawn should not be able to move 2 after first move");
-    }
 
 
     function test_creationEmitsSignal()

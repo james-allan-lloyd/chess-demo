@@ -26,11 +26,18 @@ bool Pawn::isValidMove(QPoint a) const
         direction = -1;
     }
 
+    const Piece* occupied = board()->cell(a);
+    if(occupied && occupied->color() == color())
+    {
+        return false;
+    }
+
     // qDebug() << "valid move?" << currentPosition() << a;
     if(currentPosition() + QPoint(0,direction*1) == a)
         return true;
 
-    if(!hasMoved() && currentPosition() + QPoint(0,direction*2) == a)
+    if(!hasMoved() && currentPosition() + QPoint(0,direction*2) == a
+            && !board()->cell(currentPosition() + QPoint(0, direction*1)))
         return true;
 
     if(currentPosition() + QPoint(1,direction*1) == a || currentPosition() + QPoint(-1,direction*1) == a)
