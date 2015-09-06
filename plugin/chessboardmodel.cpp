@@ -2,6 +2,7 @@
 #include "piece.h"
 #include "pawn.h"
 #include "queen.h"
+#include "rook.h"
 
 
 ChessBoardModel::ChessBoardModel(QObject* parent)
@@ -11,6 +12,7 @@ ChessBoardModel::ChessBoardModel(QObject* parent)
     // cells_[0] = new Piece("Pawn");
     pieceFactory_["queen"] = [this]() -> Piece* { return new Queen(this); };
     pieceFactory_["pawn"] = [this]() -> Piece* { return new Pawn(this); };
+    pieceFactory_["rook"] = [this]() -> Piece* { return new Rook(this); };
 }
 
 ChessBoardModel::~ChessBoardModel()

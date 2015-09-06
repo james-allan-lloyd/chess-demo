@@ -13,7 +13,8 @@ SOURCES += \
     chessboardmodel.cpp \
     piece.cpp \
     pawn.cpp \
-    queen.cpp
+    queen.cpp \
+    rook.cpp
 
 HEADERS += \
     plugin_plugin.h \
@@ -21,7 +22,8 @@ HEADERS += \
     chessboardmodel.h \
     piece.h \
     pawn.h \
-    queen.h
+    queen.h \
+    rook.h
 
 DISTFILES = qmldir
 

@@ -1,14 +1,14 @@
-#ifndef QUEEN_H
-#define QUEEN_H
+#ifndef ROOK_H
+#define ROOK_H
 
 #include "piece.h"
 
 
-class Queen : public Piece
+class Rook : public Piece
 {
     QSet<QPoint> validMoves_;
 public:
-    Queen(ChessBoardModel* parent);
+    Rook(ChessBoardModel* parent);
 
 signals:
 
@@ -17,9 +17,7 @@ public slots:
     // Piece interface
 public:
     bool isValidMove(QPoint a) const override;
-
-protected:
     void recalculateMoves() override;
 };
 
-#endif // QUEEN_H
+#endif // ROOK_H

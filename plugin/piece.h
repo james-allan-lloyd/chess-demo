@@ -8,6 +8,8 @@
 #include "chessboardmodel.h"
 
 
+inline uint qHash(const QPoint &key) { return (key.x() << 16) + key.y(); }
+
 class Piece : public QObject
 {
     Q_OBJECT
@@ -99,6 +101,9 @@ public slots:
 public:
     // FIXME: make pure rather than empty
     virtual void recalculateMoves();
+
+protected:
+    void projectMovement(int xStep, int yStep, QSet<QPoint>& validMoves);
 
 signals:
     // not really needed, but qml complains

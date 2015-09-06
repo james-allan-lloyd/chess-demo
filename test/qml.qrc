@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>main.qml</file>
         <file>tst_pawn.qml</file>
         <file>tst_queen.qml</file>
+        <file>tst_rook.qml</file>
     </qresource>
 </RCC>
