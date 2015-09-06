@@ -15,5 +15,6 @@ QML_IMPORT_PATH = ../imports
 include(deployment.pri)
 
 DISTFILES += \
-    tst_board.qml
+    tst_board.qml \
+    tst_boardview.qml
 

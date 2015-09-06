@@ -44,3 +44,6 @@ qmldir.path = $$installPath
 target.path = $$installPath
 
 INSTALLS += target qmldir
+
+RESOURCES += \
+    plugin.qrc

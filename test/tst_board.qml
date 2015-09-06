@@ -11,6 +11,13 @@ TestCase {
         id: board
     }
 
+    SignalSpy
+    {
+        id: dataChangedSpy
+        target: board
+        signalName: "dataChanged"
+    }
+
     function init()
     {
     }
@@ -93,5 +100,13 @@ TestCase {
 
         verify(pawn.isValidMove(Qt.point(0,3)), "Pawn should be able to move one after first move");
         verify(!pawn.isValidMove(Qt.point(0,4)), "Pawn should not be able to move 2 after first move");
+    }
+
+
+    function test_creationEmitsSignal()
+    {
+        var initialValue = dataChangedSpy.count
+        board.createPawn(4,4)
+        compare(initialValue + 1, dataChangedSpy.count)
     }
 }

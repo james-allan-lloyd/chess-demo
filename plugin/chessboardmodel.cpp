@@ -79,6 +79,7 @@ Piece* ChessBoardModel::createPawn(int row, int col)
     piece->setIndex(index);
     cells_[piece->index()] = piece;
     pieces_.insert(piece);
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0));
     return piece;
 }
 
