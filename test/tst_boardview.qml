@@ -82,6 +82,16 @@ Rectangle {
             verify(view.cell(0,1).validMoveDisplay.visible)
             verify(view.cell(0,2).validMoveDisplay.visible)
         }
+
+
+        function test_pieceColorsAreDisplayed()
+        {
+            var blackPawn = model.createPawn(0,0, Chess.BoardModel.BLACK)
+            var whitePawn = model.createPawn(0,7, Chess.BoardModel.WHITE)
+
+            verify(Qt.colorEqual(view.cell(0,0).labelColor, "black"))
+            verify(Qt.colorEqual(view.cell(0,7).labelColor, "white"))
+        }
     }
 }
 

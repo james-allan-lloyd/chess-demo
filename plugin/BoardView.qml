@@ -1,5 +1,6 @@
 import QtQuick 2.0
 
+
 Rectangle {
     id: boardview
     property int cellSize: 40
@@ -26,10 +27,29 @@ Rectangle {
                 property int cellX: index % 8
                 property int cellY: Math.floor(index / 8)
                 property string label: modelData ? modelData.objectName : ""
+                property color labelColor: (!modelData || modelData.isBlack) ? "black" : "white"
+                property color labelText: (!modelData || modelData.isBlack) ? "white" : "black"
+
                 color: ((cellX%2) == (cellY%2)) ? "gray" : "white"
-                Text {
-                    text: label
+                Rectangle {
                     visible: modelData
+                    radius: width/2;
+                    anchors.fill: parent
+                    color: labelText
+
+                    Rectangle {
+                        width: parent.width - 4
+                        height: parent.height - 4
+                        radius: width/2
+                        color: labelColor
+                        anchors.centerIn: parent
+                    }
+
+                    Text {
+                        text: label
+                        color: labelText
+                        anchors.centerIn: parent
+                    }
                 }
 
                 Rectangle {
@@ -38,6 +58,7 @@ Rectangle {
                     color: "yellow"
                     visible: boardview.selectedPiece ? boardview.selectedPiece.isValidMove(Qt.point(cellX, cellY)) : false
                 }
+
 
                 MouseArea {
                     anchors.fill: parent

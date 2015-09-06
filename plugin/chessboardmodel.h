@@ -20,6 +20,14 @@ public:
         ValidMoves = Qt::UserRole + 1,
     };
 
+    /**
+     * @brief The color of pieces
+     *
+     * I would have preferred this to be in piece, but because we're using
+     * factory function create* here, and QML isn't great about sharing custom
+     * enums between classes, it's expedient to just define it here. Still works
+     * as a property of piece.
+     */
     enum PieceColor {
         BLACK,
         WHITE

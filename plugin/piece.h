@@ -14,8 +14,10 @@ class Piece : public QObject
     // Q_PROPERTY(QList<QPoint> validMoves READ validMoves)
     Q_PROPERTY(QVariantList validMoves READ validMoves)
     Q_PROPERTY(int index READ index WRITE setIndex)
+    Q_PROPERTY(bool isBlack READ isBlack)
+    Q_PROPERTY(bool isWhite READ isWhite)
     Q_PROPERTY(QPoint currentPosition READ currentPosition)
-    Q_PROPERTY(ChessBoardModel::PieceColor color READ color WRITE setColor)
+    Q_PROPERTY(ChessBoardModel::PieceColor color READ color WRITE setColor NOTIFY colorChanged)
 
     ChessBoardModel* board_;
     int m_index;
@@ -55,6 +57,16 @@ public:
         return color_;
     }
 
+    bool isBlack() const
+    {
+        return color_ == ChessBoardModel::BLACK;
+    }
+
+    bool isWhite() const
+    {
+        return color_ == ChessBoardModel::WHITE;
+    }
+
 public slots:
     void setIndex(int index)
     {
@@ -73,8 +85,16 @@ public slots:
 
     void setColor(ChessBoardModel::PieceColor color)
     {
-        color_ = color;
+        if(color_ != color)
+        {
+            color_ = color;
+            emit colorChanged(color_);
+        }
     }
+
+signals:
+    // not really needed, but qml complains
+    void colorChanged(ChessBoardModel::PieceColor color);
 };
 
 #endif // PIECE_H
