@@ -49,7 +49,7 @@ public:
     void setPosition(const QPoint& p)
     {
         position_ = p;
-        positionUpdated();
+        recalculateMoves();
     }
 
     int hasMoved() const { return hasMoved_; }
@@ -96,9 +96,9 @@ public slots:
         }
     }
 
-protected:
+public:
     // FIXME: make pure rather than empty
-    virtual void positionUpdated();
+    virtual void recalculateMoves();
 
 signals:
     // not really needed, but qml complains

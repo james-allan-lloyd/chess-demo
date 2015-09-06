@@ -21,7 +21,7 @@ public:
 
 
 protected:
-    void positionUpdated() override;
+    void recalculateMoves() override;
 
 private:
     void addRow(int xStep, int yStep);

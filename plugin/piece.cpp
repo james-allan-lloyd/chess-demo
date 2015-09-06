@@ -2,7 +2,7 @@
 
 #include <QDebug>
 
-void Piece::positionUpdated()
+void Piece::recalculateMoves()
 {
     qDebug() << "Base position updated";
 }

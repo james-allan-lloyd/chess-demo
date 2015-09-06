@@ -65,32 +65,28 @@ Rectangle {
             checkDirection(queen, -1, 1)  // left, bottom
             checkDirection(queen, 1, -1)  // right, top
             checkDirection(queen, 1, 1)   // right, bottom
+        }
 
-            // verify(queen.isValidMove(Qt.point(4, 4)));
-            // verify(queen.moveTo(Qt.point(4, 4)));
 
-            // checkDirection(queen, -1, -1) // left, top
-            // checkDirection(queen, -1, 1)  // left, bottom
-            // checkDirection(queen, 1, -1)  // right, top
-            // checkDirection(queen, 1, 1)   // right, bottom
+        function test_queenDoesNotMoveThroughAllies()
+        {
+            var queen = board.create("Queen", 4, 4)
+            var pawn = board.create("Pawn", 4, 5)
+            verify(pawn)
 
-            //var p = queen.currentPosition;
+            verify(!queen.isValidMove(Qt.point(4,5)), "Queen does not take pawn")
+            verify(!queen.isValidMove(Qt.point(4,6)), "Queen does not move through pawn")
+        }
 
-            // var xdir = -1
-            // var ydir = -1
-            // while(p.x > 0 && p.y > 0)
-            // {
-            //     p = Qt.point(p.x + xdir, p.y + ydir)
-            //     verify(queen.isValidMove(p), "Valid move " + p);
-            // }
 
-            //xdir = -1
-            //ydir = 1
-            //while(p.x > 0 && p.y > 0 && p.x < 7 && p.y < 7)
-            //{
-            //    p = Qt.point(p.x + xdir, p.y + ydir)
-            //    verify(queen.isValidMove(p), "Valid move " + p);
-            //}
+        function test_queenTakesEnemies()
+        {
+            var queen = board.create("Queen", 4, 4, Chess.BoardModel.WHITE)
+            var enemyPawn = board.create("Pawn", 4, 5, Chess.BoardModel.BLACK)
+            verify(enemyPawn)
+
+            verify(queen.isValidMove(Qt.point(4,5)), "Queen takes enemy pawn")
+            verify(!queen.isValidMove(Qt.point(4,6)), "Queen does not move through enemy pawn")
         }
     }
 }

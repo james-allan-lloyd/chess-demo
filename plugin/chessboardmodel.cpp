@@ -100,30 +100,17 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
 
     cells_[index] = piece;
     piece->setPosition(position);
+    foreach(Piece* otherPiece, pieces_)
+    {
+        otherPiece->recalculateMoves();
+    }
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));
     return true;
 }
 
 Piece* ChessBoardModel::createPawn(int x, int y, PieceColor color)
 {
-    if(x < 0 || y < 0 || x >= 8 || y >= 8)
-    {
-        return NULL;
-    }
-    int index = x + y * 8;
-    if(cells_[index] != NULL)
-    {
-        // return NULL if cell is already occupied
-        // qDebug() << "cell occupied" << x << "," << y << (void*)cells_[index];
-        return NULL;
-    }
-    Piece* piece = new Pawn(this);
-    piece->setColor(color);
-    piece->setPosition(QPoint(x, y));
-    cells_[piece->index()] = piece;
-    pieces_.insert(piece);
-    emit dataChanged(createIndex(index, 0), createIndex(index, 0));
-    return piece;
+    return create("pawn", x, y, color);
 }
 
 Piece* ChessBoardModel::create(QString name, int x, int y, ChessBoardModel::PieceColor color)
@@ -148,6 +135,11 @@ Piece* ChessBoardModel::create(QString name, int x, int y, ChessBoardModel::Piec
     piece->setColor(color);
     piece->setPosition(QPoint(x,y));
     cells_[piece->index()] = piece;
+    foreach(Piece* otherPiece, pieces_)
+    {
+        otherPiece->recalculateMoves();
+    }
+
     pieces_.insert(piece);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));
     return piece;

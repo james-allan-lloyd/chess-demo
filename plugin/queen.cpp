@@ -1,5 +1,7 @@
 #include "queen.h"
 
+#include <QDebug>
+
 Queen::Queen(ChessBoardModel* parent)
     : Piece("Queen", parent)
 {
@@ -12,7 +14,7 @@ bool Queen::isValidMove(QPoint a) const
 }
 
 
-void Queen::positionUpdated()
+void Queen::recalculateMoves()
 {
     validMoves_.clear();
 
@@ -36,7 +38,17 @@ void Queen::addRow(int xStep, int yStep)
     p += QPoint(xStep, yStep);
     while(p.x() >= 0 && p.y() >= 0 && p.x() <= 7 && p.y() <= 7)
     {
-        validMoves_.insert(p);
-        p += QPoint(xStep, yStep);
+        Piece* occupied = board()->cell(p);
+        if(!occupied || occupied->color() != color())
+        {
+            validMoves_.insert(p);
+            p += QPoint(xStep, yStep);
+            if(occupied)
+                break;
+        }
+        else
+        {
+            break;
+        }
     }
 }
