@@ -37,7 +37,7 @@ public:
     ChessBoardModel(QObject *parent = 0);
     ~ChessBoardModel();
 
-    Piece* cell(QPoint p);
+    Q_INVOKABLE Piece* cell(QPoint p);
     const Piece* cell(QPoint p) const;
 
     Q_INVOKABLE void removePiece(Piece* piece);

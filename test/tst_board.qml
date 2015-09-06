@@ -30,12 +30,14 @@ TestCase {
     }
 
     function test_itStartsWithAnEmptyBoard() {
+        var initial = dataChangedSpy.count;
         board.clearPieces()
         compare(board.pieceCount, 0, "New board should not have pieces on it")
         for(var i=0; i < board.count; ++i)
         {
             compare(board.get(i), null)
         }
+        verify(dataChangedSpy.count > initial, "Data changed signals were emitted to update the view")
     }
 
     function test_itCreatesPawns() {
@@ -140,6 +142,8 @@ TestCase {
 
         verify(blackPawn.isValidMove(Qt.point(0, 1)), "Black pawn can still move forward")
         verify(blackPawn.moveTo(Qt.point(1, 1)), "Black pawn takes white pawn")
+
+        compare(board.cell(Qt.point(0,0)), null)
 
         // NOTE: white pawn is dangling here...
     }

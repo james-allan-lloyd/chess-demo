@@ -35,11 +35,12 @@ const Piece* ChessBoardModel::cell(QPoint p) const
 
 void ChessBoardModel::removePiece(Piece* piece)
 {
+    int index = piece->index();
     Q_ASSERT(cells_[piece->index()] != NULL);
     cells_[piece->index()] = NULL;
     delete piece;
     pieces_.remove(piece);
-    emit dataChanged(createIndex(piece->index(), 0), createIndex(piece->index(), 0));
+    emit dataChanged(createIndex(index, 0), createIndex(index, 0));
 }
 
 int ChessBoardModel::rowCount(const QModelIndex&) const
@@ -89,6 +90,10 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
         targetPiece = NULL; // deleted
     }
     Q_ASSERT(cell(position) == NULL);
+
+    cells_[piece->index()] = NULL;
+    emit dataChanged(createIndex(piece->index(), 0), createIndex(piece->index(), 0));
+
     cells_[index] = piece;
     piece->setIndex(index);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));
@@ -128,4 +133,5 @@ void ChessBoardModel::clearPieces()
     }
     pieces_.clear();
     cells_.fill(NULL);
+    emit dataChanged(createIndex(0, 0), createIndex(63, 0));
 }
