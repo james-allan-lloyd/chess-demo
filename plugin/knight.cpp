@@ -29,6 +29,12 @@ void Knight::recalculateMoves()
             continue;
         }
 
+        Piece* occupied = board()->cell(targetPoint);
+        if(occupied && occupied->color() == color())
+        {
+            continue;
+        }
+
         validMoves_.insert(targetPoint);
     }
 }

@@ -39,13 +39,17 @@ Rectangle {
 
         function test_knightDoesNotAttackAllies()
         {
-
+            var knight = board.create("knight", 4, 4)
+            board.create("pawn", 3, 2)
+            verify(!knight.isValidMove(Qt.point(3, 2)));
         }
 
 
-        function test_knightDoesTakesEnemies()
+        function test_knightDoesTakeEnemies()
         {
-
+            var knight = board.create("knight", 4, 4, Chess.BoardModel.BLACK)
+            board.create("pawn", 3, 2, Chess.BoardModel.WHITE)
+            verify(knight.isValidMove(Qt.point(3, 2)));
         }
     }
 
