@@ -10,12 +10,6 @@ Rectangle {
     property var selectedPiece: null
     color: "red"  // Debugging size
 
-    function cell(x, y)
-    {
-        // Don't need range checking because JS will give you null or undefined anyway.
-        return cells.itemAt(x + y * columns)
-    }
-
     Grid {
         // id: grid
         anchors.centerIn: parent
@@ -70,6 +64,13 @@ Rectangle {
                 }
             }
         }
+    }
+
+
+    function cell(x, y)
+    {
+        // Don't need range checking because JS will give you null or undefined anyway.
+        return cells.itemAt(x + y * columns)
     }
 }
 

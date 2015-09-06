@@ -37,9 +37,10 @@ Rectangle {
         function test_movePiece()
         {
             var pawn = model.createPawn(0, 0)
-            mouseClick(view.cells.itemAt(0), 5, 5)
+            // mouseClick(view.cell(0, 0))
+            mouseClick(view.cell(0, 0), 5, 5)
             compare(view.selectedPiece, pawn, "Pawn is selected")
-            mouseClick(view.cells.itemAt(8), 5, 5)
+            mouseClick(view.cell(0, 1), 5, 5)
             verify(pawn.currentPosition === Qt.point(0, 1), "Pawn has correct position")
             compare(view.selectedPiece, null, "Pawn is no longer selected")
         }
@@ -53,15 +54,21 @@ Rectangle {
             verify(!view.cell(-8, -8))
         }
 
-        // function test_movingPieceToInvalidPosition()
-        // {
-        //     var pawn = model.createPawn(0, 0)
-        //     mouseClick(view.cells.itemAt(0), 5, 5)
-        //     compare(view.selectedPiece, pawn, "Pawn is selected")
-        //     mouseClick(view.cells.itemAt(8), 5, 5)
-        //     verify(pawn.currentPosition === Qt.point(0, 1), "Pawn has correct position")
-        //     compare(view.selectedPiece, null, "Pawn is no longer selected")
-        // }
+        function comparePoint(actual, expected)
+        {
+            compare(actual.x, expected.x)
+            compare(actual.y, expected.y)
+        }
+
+        function test_movingPieceToInvalidPosition()
+        {
+            var invalidPosition = Qt.point(7, 7)
+            var pawn = model.createPawn(0, 0)
+            mouseClick(view.cell(0, 0), 5, 5)
+            compare(view.selectedPiece, pawn, "Pawn is selected")
+            mouseClick(view.cell(invalidPosition.x, invalidPosition.y), 5, 5)
+            comparePoint(pawn.currentPosition, Qt.point(0,0), "Pawn has not moved")
+        }
     }
 }
 
