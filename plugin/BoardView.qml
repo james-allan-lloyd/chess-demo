@@ -12,7 +12,6 @@ Rectangle {
     color: "red"  // Debugging size
 
     Grid {
-        // id: grid
         anchors.centerIn: parent
         rows: boardview.rows
         columns: boardview.columns
@@ -69,24 +68,16 @@ Rectangle {
                             if(modelData)
                             {
                                 boardview.selectedPiece = modelData
-                                // chess.validMoves = selectedPiece.validMoves
                             }
                             else
                             {
                                 boardview.selectedPiece = null
-                                // chess.validMoves = []
                             }
                         }
                         else
                         {
                             boardview.selectedPiece.moveTo(Qt.point(cellX, cellY));
-                            // if(chess.validMoves[0] === index)
-                            // {
-                            //     // take the piece
-                            //     chessModel.movePiece(index, chess.selectedPiece);
-                            // }
                             boardview.selectedPiece = null
-                            // chess.validMoves = []
                         }
                     }
                 }
@@ -101,32 +92,3 @@ Rectangle {
         return cells.itemAt(x + y * columns)
     }
 }
-
-// Item {
-//     id: board
-//     property var model: null;
-//     property int cellSide: 40
-//     property int rows: 8
-//     property int columns: 8
-//
-//     Rectangle {
-//         anchors.fill: parent
-//         color: "blue"
-//     }
-//
-//     Grid {
-//         anchors.fill: parent
-//         rows: board.rows; columns: board.columns
-//         clip: true
-//         Repeater {
-//             model: board.model
-//             Rectangle {
-//                 width: board.cellSide; height: board.cellSide
-//                 property int row: Math.floor(index / board.columns)
-//                 property int col: index % board.columns
-//                 color: ((row %2) == (col%2)) ? "gray" : "white"
-//             }
-//         }
-//     }
-// }
-

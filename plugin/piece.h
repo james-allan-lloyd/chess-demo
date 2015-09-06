@@ -14,8 +14,8 @@ class Piece : public QObject
     // Q_PROPERTY(QList<QPoint> validMoves READ validMoves)
     Q_PROPERTY(QVariantList validMoves READ validMoves)
     Q_PROPERTY(int index READ index WRITE setIndex)
-    Q_PROPERTY(bool isBlack READ isBlack)
-    Q_PROPERTY(bool isWhite READ isWhite)
+    Q_PROPERTY(bool isBlack READ isBlack NOTIFY colorChanged)
+    Q_PROPERTY(bool isWhite READ isWhite NOTIFY colorChanged)
     Q_PROPERTY(QPoint currentPosition READ currentPosition)
     Q_PROPERTY(ChessBoardModel::PieceColor color READ color WRITE setColor NOTIFY colorChanged)
 
