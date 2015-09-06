@@ -7,8 +7,9 @@
 class Pawn : public Piece
 {
     QList<QPoint> result;
+    bool hasMoved_;
 public:
-    Pawn(QObject* parent);
+    Pawn(ChessBoardModel* parent);
 
     bool isValidMove(QPoint a) const override;
 

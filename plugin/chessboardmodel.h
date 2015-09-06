@@ -29,7 +29,7 @@ public:
     QVariant data(const QModelIndex &index, int /*role*/) const;
 
     int pieceCount() const { return pieces_.size(); }
-    Q_INVOKABLE bool movePiece(int index, Piece* piece);
+    bool movePiece(Piece* piece, QPoint position);
     Q_INVOKABLE Piece* createPawn(int row, int col);
     Q_INVOKABLE void clearPieces();
 

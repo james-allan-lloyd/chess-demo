@@ -33,9 +33,26 @@ QHash<int, QByteArray> ChessBoardModel::roleNames() const {
     return roles;
 }
 
-bool ChessBoardModel::movePiece(int index, Piece* piece)
+bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
 {
-    qDebug() << "Move piece to " << index;
+    if(piece == NULL)
+    {
+        qWarning() << "Attempt to move invalid piece to" << position;
+        return NULL;
+    }
+
+    Q_ASSERT(piece != NULL);
+
+    if(position.x() >= 8 || position.y() >= 8)
+    {
+        return false;
+    }
+    if(!piece->isValidMove(position))
+    {
+        return false;
+    }
+    int index = position.x() + position.y() * 8;
+    // qDebug() << "Move piece to " << index;
     cells_[piece->index()] = NULL;
     emit dataChanged(createIndex(piece->index(), 0), createIndex(piece->index(), 0));
     cells_[index] = piece;
@@ -55,7 +72,7 @@ Piece* ChessBoardModel::createPawn(int row, int col)
     if(cells_[index] != NULL)
     {
         // return NULL if cell is already occupied
-        qDebug() << "cell occupied" << row << "," << col << (void*)cells_[index];
+        // qDebug() << "cell occupied" << row << "," << col << (void*)cells_[index];
         return NULL;
     }
     Piece* piece = new Pawn(this);
@@ -70,6 +87,7 @@ void ChessBoardModel::clearPieces()
 {
     foreach(Piece* piece, pieces_)
     {
+        Q_ASSERT(cells_[piece->index()] != NULL);
         cells_[piece->index()] = NULL;
         delete piece;
     }

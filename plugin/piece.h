@@ -5,6 +5,8 @@
 #include <QPoint>
 #include <QQmlListProperty>
 
+#include "chessboardmodel.h"
+
 
 class Piece : public QObject
 {
@@ -14,11 +16,15 @@ class Piece : public QObject
     Q_PROPERTY(int index READ index WRITE setIndex)
     Q_PROPERTY(QPoint currentPosition READ currentPosition)
 
+    ChessBoardModel* board_;
     int m_index;
+    bool hasMoved_;
 
 public:
-    Piece(QString name, QObject* parent)
-        : QObject(parent)
+    Piece(QString name, ChessBoardModel* board)
+        : QObject(board)
+        , board_(board)
+        , hasMoved_(false)
     {
         setObjectName(name);
     }
@@ -34,8 +40,11 @@ public:
 
     QPoint currentPosition() const
     {
-        return QPoint(m_index / 8, m_index % 8);
+        return QPoint(m_index % 8, m_index / 8);
     }
+
+    int hasMoved() const { return hasMoved_; }
+    ChessBoardModel* board() { return board_; }
 
 public slots:
     void setIndex(int index)
@@ -45,16 +54,12 @@ public slots:
 
     bool moveTo(QPoint p)
     {
-        if(p.x() >= 8 || p.y() >= 8)
+        bool result = board_->movePiece(this, p);
+        if(result)
         {
-            return false;
+            hasMoved_ = true;
         }
-        if(isValidMove(p))
-        {
-            setIndex(p.x() + p.y() * 8);
-            return true;
-        }
-        return false;
+        return result;
     }
 };
 

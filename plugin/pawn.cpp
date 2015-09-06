@@ -1,7 +1,7 @@
 #include "pawn.h"
 #include <QDebug>
 
-Pawn::Pawn(QObject* parent)
+Pawn::Pawn(ChessBoardModel* parent)
     : Piece("Pawn", parent)
 {
     result.append(QPoint(1, 0));
@@ -17,11 +17,16 @@ QVariantList Pawn::validMoves()
 
 bool Pawn::isValidMove(QPoint a) const
 {
-    if(a.x() >= 8 || a.y() >= 8)
+    if(a.x() < 0 || a.y() < 0 || a.x() >= 8 || a.y() >= 8)
         return false;
 
-    if(currentPosition() + QPoint(1, 0) == a)
+    // qDebug() << "valid move?" << currentPosition() << a;
+    if(currentPosition() + QPoint(0,1) == a)
         return true;
+
+    if(!hasMoved() && currentPosition() + QPoint(0,2) == a)
+        return true;
+
     return false;
 }
 
