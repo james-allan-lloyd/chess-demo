@@ -85,6 +85,7 @@ public slots:
         if(result)
         {
             hasMoved_ = true;
+            recalculateMoves();  // need to recalc based on the fact we've now moved.
         }
         return result;
     }

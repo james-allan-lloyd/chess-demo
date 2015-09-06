@@ -64,5 +64,20 @@ Rectangle {
             verify(pawn.isValidMove(Qt.point(0,3)), "Pawn should be able to move one after first move");
             verify(!pawn.isValidMove(Qt.point(0,4)), "Pawn should not be able to move 2 after first move");
         }
+
+
+        function test_pawnDoesNotCaptureForward()
+        {
+            var pawn = board.createPawn(0, 0, Chess.BoardModel.BLACK)
+            var enemyPawn = board.createPawn(0, 1, Chess.BoardModel.WHITE)
+
+            verify(!pawn.isValidMove(Qt.point(0, 1)))
+            verify(!pawn.isValidMove(Qt.point(0, 2)))
+
+            var pawn2 = board.createPawn(1, 0, Chess.BoardModel.BLACK)
+            var enemyPawn2 = board.createPawn(1, 2, Chess.BoardModel.WHITE)
+            verify(pawn2.isValidMove(Qt.point(1,1)))
+            verify(!pawn2.isValidMove(Qt.point(1,2)))
+        }
     }
 }

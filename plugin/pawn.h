@@ -6,6 +6,7 @@
 
 class Pawn : public Piece
 {
+    QSet<QPoint> validMoves_;
 public:
     Pawn(ChessBoardModel* parent);
 
@@ -15,6 +16,10 @@ signals:
 
 public slots:
 
+
+    // Piece interface
+public:
+    void recalculateMoves() override;
 };
 
 #endif // PAWN_H

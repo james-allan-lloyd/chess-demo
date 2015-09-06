@@ -57,6 +57,8 @@ public:
     Q_INVOKABLE Piece* create(QString name, int x, int y, PieceColor color = BLACK);
     Q_INVOKABLE void clearPieces();
 
+    bool isValidPosition(const QPoint& p) const;
+
 signals:
     void pieceCountChanged(int newPieceCount);
 };

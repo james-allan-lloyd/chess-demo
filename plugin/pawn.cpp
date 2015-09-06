@@ -9,8 +9,14 @@ Pawn::Pawn(ChessBoardModel* parent)
 
 bool Pawn::isValidMove(QPoint a) const
 {
-    if(a.x() < 0 || a.y() < 0 || a.x() >= 8 || a.y() >= 8)
-        return false;
+    return validMoves_.contains(a);
+}
+
+
+
+void Pawn::recalculateMoves()
+{
+    validMoves_.clear();
 
     int direction = 1;
     if(color() == ChessBoardModel::WHITE)
@@ -18,27 +24,31 @@ bool Pawn::isValidMove(QPoint a) const
         direction = -1;
     }
 
-    const Piece* occupied = board()->cell(a);
-    if(occupied && occupied->color() == color())
+    QPoint oneMove = currentPosition() + QPoint(0, direction);
+    if(board()->isValidPosition(oneMove) && !board()->cell(oneMove))
     {
-        return false;
+        validMoves_.insert(oneMove);
+        if(!hasMoved())
+        {
+            QPoint twoMove = currentPosition() + QPoint(0, 2*direction);
+            if(board()->isValidPosition(twoMove) && !board()->cell(twoMove))
+            {
+                validMoves_.insert(twoMove);
+            }
+        }
     }
 
-    // qDebug() << "valid move?" << currentPosition() << a;
-    if(currentPosition() + QPoint(0,direction*1) == a)
-        return true;
-
-    if(!hasMoved() && currentPosition() + QPoint(0,direction*2) == a
-            && !board()->cell(currentPosition() + QPoint(0, direction*1)))
-        return true;
-
-    if(currentPosition() + QPoint(1,direction*1) == a || currentPosition() + QPoint(-1,direction*1) == a)
+    QPoint leftAttack = currentPosition() + QPoint(1,direction*1);
+    Piece* leftAttackPiece = board()->cell(leftAttack);
+    if(leftAttackPiece && leftAttackPiece->color() != color())
     {
-        // diagonal attack
-        return board()->cell(a) != NULL && board()->cell(a)->color() != color();
-        // return true;
+        validMoves_.insert(leftAttack);
     }
 
-    return false;
+    QPoint rightAttack = currentPosition() + QPoint(-1,direction*1);
+    Piece* rightAttackPiece = board()->cell(rightAttack);
+    if(rightAttackPiece && rightAttackPiece->color() != color())
+    {
+        validMoves_.insert(rightAttack);
+    }
 }
-

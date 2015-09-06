@@ -26,7 +26,7 @@ ChessBoardModel::~ChessBoardModel()
 
 Piece*ChessBoardModel::cell(QPoint p)
 {
-    if(p.x() < 0 || p.y() < 0 || p.x() > 8 || p.y() > 8)
+    if(!isValidPosition(p))
     {
         return NULL;
     }
@@ -35,7 +35,7 @@ Piece*ChessBoardModel::cell(QPoint p)
 
 const Piece* ChessBoardModel::cell(QPoint p) const
 {
-    if(p.x() < 0 || p.y() < 0 || p.x() > 8 || p.y() > 8)
+    if(!isValidPosition(p))
     {
         return NULL;
     }
@@ -163,4 +163,10 @@ void ChessBoardModel::clearPieces()
     pieces_.clear();
     cells_.fill(NULL);
     emit dataChanged(createIndex(0, 0), createIndex(63, 0));
+}
+
+
+bool ChessBoardModel::isValidPosition(const QPoint& p) const
+{
+    return p.x() >= 0 && p.y() >= 0 && p.x() < 8 && p.y() < 8;
 }
