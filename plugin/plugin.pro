@@ -14,7 +14,8 @@ SOURCES += \
     piece.cpp \
     pawn.cpp \
     queen.cpp \
-    rook.cpp
+    rook.cpp \
+    bishop.cpp
 
 HEADERS += \
     plugin_plugin.h \
@@ -23,7 +24,8 @@ HEADERS += \
     piece.h \
     pawn.h \
     queen.h \
-    rook.h
+    rook.h \
+    bishop.h
 
 DISTFILES = qmldir
 

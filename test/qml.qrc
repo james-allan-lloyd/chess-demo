@@ -3,5 +3,6 @@
         <file>tst_pawn.qml</file>
         <file>tst_queen.qml</file>
         <file>tst_rook.qml</file>
+        <file>tst_bishop.qml</file>
     </qresource>
 </RCC>
