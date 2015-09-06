@@ -44,7 +44,7 @@ TestCase {
         compare(board.pieceCount, 1, "The piece shall be created on the board")
 
         board.clearPieces()
-        compare(board.pieceCount, 0, "The piece shall be created on the board")
+        compare(board.pieceCount, 0, "The piece was cleared")
         for(var i=0; i < board.count; ++i)
         {
             compare(board.get(i), null)
@@ -110,4 +110,13 @@ TestCase {
         compare(initialValue + 1, dataChangedSpy.count)
     }
 
+
+    function test_creatingWhitePieces()
+    {
+        var whitePawn = board.createPawn(0, 7, Chess.BoardModel.WHITE)
+        verify(whitePawn, "Pawn is created successfully")
+        compare(whitePawn.color, Chess.BoardModel.WHITE)
+
+        verify(whitePawn.isValidMove(Qt.point(0, 6)), "White pawn moves up the board")
+    }
 }

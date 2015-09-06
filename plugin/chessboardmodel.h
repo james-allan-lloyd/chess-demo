@@ -20,6 +20,12 @@ public:
         ValidMoves = Qt::UserRole + 1,
     };
 
+    enum PieceColor {
+        BLACK,
+        WHITE
+    };
+    Q_ENUMS(PieceColor)
+
     ChessBoardModel(QObject *parent = 0);
     ~ChessBoardModel();
 
@@ -30,7 +36,7 @@ public:
 
     int pieceCount() const { return pieces_.size(); }
     bool movePiece(Piece* piece, QPoint position);
-    Q_INVOKABLE Piece* createPawn(int row, int col);
+    Q_INVOKABLE Piece* createPawn(int row, int col, PieceColor color = BLACK);
     Q_INVOKABLE void clearPieces();
 
 signals:

@@ -15,16 +15,20 @@ class Piece : public QObject
     Q_PROPERTY(QVariantList validMoves READ validMoves)
     Q_PROPERTY(int index READ index WRITE setIndex)
     Q_PROPERTY(QPoint currentPosition READ currentPosition)
+    Q_PROPERTY(ChessBoardModel::PieceColor color READ color WRITE setColor)
 
     ChessBoardModel* board_;
     int m_index;
     bool hasMoved_;
+
+    ChessBoardModel::PieceColor color_;
 
 public:
     Piece(QString name, ChessBoardModel* board)
         : QObject(board)
         , board_(board)
         , hasMoved_(false)
+        , color_(ChessBoardModel::BLACK)
     {
         setObjectName(name);
     }
@@ -46,6 +50,11 @@ public:
     int hasMoved() const { return hasMoved_; }
     ChessBoardModel* board() { return board_; }
 
+    ChessBoardModel::PieceColor color() const
+    {
+        return color_;
+    }
+
 public slots:
     void setIndex(int index)
     {
@@ -60,6 +69,11 @@ public slots:
             hasMoved_ = true;
         }
         return result;
+    }
+
+    void setColor(ChessBoardModel::PieceColor color)
+    {
+        color_ = color;
     }
 };
 

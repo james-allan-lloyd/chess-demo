@@ -22,7 +22,8 @@ Window {
     function setupBoard()
     {
         boardModel.clearPieces()
-        boardModel.createPawn(0,0)
+        boardModel.createPawn(0, 0, Chess.BoardModel.BLACK)
+        boardModel.createPawn(0, 7, Chess.BoardModel.WHITE)
     }
 
     Text {

@@ -61,21 +61,21 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
     return true;
 }
 
-Piece* ChessBoardModel::createPawn(int row, int col)
+Piece* ChessBoardModel::createPawn(int x, int y, PieceColor color)
 {
-    if(row < 0 || col < 0 || row >= 8 || col >= 8)
+    if(x < 0 || y < 0 || x >= 8 || y >= 8)
     {
-        // qDebug() << "invalid position" << row << "," << col;
         return NULL;
     }
-    int index = row * 8 + col;
+    int index = x + y * 8;
     if(cells_[index] != NULL)
     {
         // return NULL if cell is already occupied
-        // qDebug() << "cell occupied" << row << "," << col << (void*)cells_[index];
+        // qDebug() << "cell occupied" << x << "," << y << (void*)cells_[index];
         return NULL;
     }
     Piece* piece = new Pawn(this);
+    piece->setColor(color);
     piece->setIndex(index);
     cells_[piece->index()] = piece;
     pieces_.insert(piece);

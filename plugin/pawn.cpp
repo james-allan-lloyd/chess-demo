@@ -20,11 +20,17 @@ bool Pawn::isValidMove(QPoint a) const
     if(a.x() < 0 || a.y() < 0 || a.x() >= 8 || a.y() >= 8)
         return false;
 
+    int direction = 1;
+    if(color() == ChessBoardModel::WHITE)
+    {
+        direction = -1;
+    }
+
     // qDebug() << "valid move?" << currentPosition() << a;
-    if(currentPosition() + QPoint(0,1) == a)
+    if(currentPosition() + QPoint(0,direction*1) == a)
         return true;
 
-    if(!hasMoved() && currentPosition() + QPoint(0,2) == a)
+    if(!hasMoved() && currentPosition() + QPoint(0,direction*2) == a)
         return true;
 
     return false;
