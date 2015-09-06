@@ -22,8 +22,10 @@ Window {
     function setupBoard()
     {
         boardModel.clearPieces()
+        boardModel.createPawn(4, 0, Chess.BoardModel.BLACK)
+        boardModel.createPawn(4, 7, Chess.BoardModel.WHITE)
         boardModel.createPawn(0, 0, Chess.BoardModel.BLACK)
-        boardModel.createPawn(0, 7, Chess.BoardModel.WHITE)
+        boardModel.createPawn(1, 1, Chess.BoardModel.WHITE)
     }
 
     Text {

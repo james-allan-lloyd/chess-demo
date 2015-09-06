@@ -15,6 +15,33 @@ ChessBoardModel::~ChessBoardModel()
 
 }
 
+Piece*ChessBoardModel::cell(QPoint p)
+{
+    if(p.x() < 0 || p.y() < 0 || p.x() > 8 || p.y() > 8)
+    {
+        return NULL;
+    }
+    return cells_[p.x() + p.y() * 8];
+}
+
+const Piece* ChessBoardModel::cell(QPoint p) const
+{
+    if(p.x() < 0 || p.y() < 0 || p.x() > 8 || p.y() > 8)
+    {
+        return NULL;
+    }
+    return cells_[p.x() + p.y() * 8];
+}
+
+void ChessBoardModel::removePiece(Piece* piece)
+{
+    Q_ASSERT(cells_[piece->index()] != NULL);
+    cells_[piece->index()] = NULL;
+    delete piece;
+    pieces_.remove(piece);
+    emit dataChanged(createIndex(piece->index(), 0), createIndex(piece->index(), 0));
+}
+
 int ChessBoardModel::rowCount(const QModelIndex&) const
 {
     return 8 * 8;
@@ -38,7 +65,7 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
     if(piece == NULL)
     {
         qWarning() << "Attempt to move invalid piece to" << position;
-        return NULL;
+        return false;
     }
 
     Q_ASSERT(piece != NULL);
@@ -53,8 +80,15 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
     }
     int index = position.x() + position.y() * 8;
     // qDebug() << "Move piece to " << index;
-    cells_[piece->index()] = NULL;
-    emit dataChanged(createIndex(piece->index(), 0), createIndex(piece->index(), 0));
+
+    Piece* targetPiece = cell(position);
+    Q_ASSERT(targetPiece != piece);
+    if(targetPiece)
+    {
+        removePiece(targetPiece);
+        targetPiece = NULL; // deleted
+    }
+    Q_ASSERT(cell(position) == NULL);
     cells_[index] = piece;
     piece->setIndex(index);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));

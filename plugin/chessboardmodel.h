@@ -13,7 +13,7 @@ class ChessBoardModel : public QAbstractListModel
     Q_OBJECT
     Q_PROPERTY(int pieceCount READ pieceCount NOTIFY pieceCountChanged)
 
-    QVector<QObject*> cells_;
+    QVector<Piece*> cells_;
     QSet<Piece*> pieces_;
 public:
     enum PieceRoles {
@@ -36,6 +36,11 @@ public:
 
     ChessBoardModel(QObject *parent = 0);
     ~ChessBoardModel();
+
+    Piece* cell(QPoint p);
+    const Piece* cell(QPoint p) const;
+
+    Q_INVOKABLE void removePiece(Piece* piece);
 
     // QAbstractItemModel methods
     QHash<int, QByteArray> roleNames() const;

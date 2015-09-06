@@ -21,8 +21,6 @@ Rectangle {
             model: boardview.model ? boardview.model : boardview.rows * boardview.columns
             Rectangle {
                 property var validMoveDisplay: validMoveDisplay
-                width: boardview.cellSize
-                height: boardview.cellSize
                 property int cellX: index % 8
                 property int cellY: Math.floor(index / 8)
                 property string label: modelData ? modelData.objectName : ""
@@ -30,6 +28,16 @@ Rectangle {
                 property color labelText: (!modelData || modelData.isBlack) ? "white" : "black"
 
                 color: ((cellX%2) == (cellY%2)) ? "gray" : "white"
+                width: boardview.cellSize
+                height: boardview.cellSize
+
+                Rectangle {
+                    id: validMoveDisplay
+                    anchors.fill: parent
+                    color: "yellow"
+                    visible: boardview.selectedPiece ? boardview.selectedPiece.isValidMove(Qt.point(cellX, cellY)) : false
+                }
+
                 Rectangle {
                     visible: modelData
                     radius: width/2;
@@ -49,13 +57,6 @@ Rectangle {
                         color: labelText
                         anchors.centerIn: parent
                     }
-                }
-
-                Rectangle {
-                    id: validMoveDisplay
-                    anchors.fill: parent
-                    color: "yellow"
-                    visible: boardview.selectedPiece ? boardview.selectedPiece.isValidMove(Qt.point(cellX, cellY)) : false
                 }
 
 

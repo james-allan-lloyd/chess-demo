@@ -51,6 +51,7 @@ public:
 
     int hasMoved() const { return hasMoved_; }
     ChessBoardModel* board() { return board_; }
+    const ChessBoardModel* board() const { return board_; }
 
     ChessBoardModel::PieceColor color() const
     {

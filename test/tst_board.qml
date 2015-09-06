@@ -119,4 +119,34 @@ TestCase {
 
         verify(whitePawn.isValidMove(Qt.point(0, 6)), "White pawn moves up the board")
     }
+
+
+    function test_removingPieces()
+    {
+        var pawn = board.createPawn(0, 0)
+        verify(pawn)
+        board.removePiece(pawn)
+        compare(board.pieceCount, 0, "Board is empty after removing only piece")
+    }
+
+
+    function test_pawnsTakingEnemyPieces()
+    {
+        var blackPawn = board.createPawn(0, 0, Chess.BoardModel.BLACK)
+        var whitePawn = board.createPawn(1, 1, Chess.BoardModel.WHITE)
+
+        verify(blackPawn.isValidMove(Qt.point(1, 1)), "Black pawn can attack white pawn")
+        verify(whitePawn.isValidMove(Qt.point(0, 0)), "White pawn can attack black pawn")
+
+        verify(blackPawn.isValidMove(Qt.point(0, 1)), "Black pawn can still move forward")
+        verify(blackPawn.moveTo(Qt.point(1, 1)), "Black pawn takes white pawn")
+
+        // NOTE: white pawn is dangling here...
+    }
+
+
+    function test_pawnsCantTakeAllyPieces()
+    {
+
+    }
 }
