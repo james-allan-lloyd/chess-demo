@@ -4,5 +4,4 @@
 
 void Piece::recalculateMoves()
 {
-    qDebug() << "Base position updated";
 }
