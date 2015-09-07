@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import com.luxoft.Chess 1.0 as Chess
 
 
 Rectangle {
@@ -109,5 +110,39 @@ Rectangle {
     function resetTurns()
     {
         currentPlayer = "white"
+    }
+
+
+    function resetToDefault()
+    {
+        resetTurns()
+        model.clearPieces()
+        model.create("Rook",   0, 0, Chess.BoardModel.BLACK)
+        model.create("Knight", 1, 0, Chess.BoardModel.BLACK)
+        model.create("Bishop", 2, 0, Chess.BoardModel.BLACK)
+        model.create("Queen",  3, 0, Chess.BoardModel.BLACK)
+        model.create("King",   4, 0, Chess.BoardModel.BLACK)
+        model.create("Bishop", 5, 0, Chess.BoardModel.BLACK)
+        model.create("Knight", 6, 0, Chess.BoardModel.BLACK)
+        model.create("Rook",   7, 0, Chess.BoardModel.BLACK)
+
+        for(var i=0; i<8; ++i)
+        {
+            model.create("Pawn", i, 1, Chess.BoardModel.BLACK)
+        }
+
+        for(var i=0; i<8; ++i)
+        {
+            model.create("Pawn", i, 6, Chess.BoardModel.WHITE)
+        }
+
+        model.create("Rook",   0, 7, Chess.BoardModel.WHITE)
+        model.create("Knight", 1, 7, Chess.BoardModel.WHITE)
+        model.create("Bishop", 2, 7, Chess.BoardModel.WHITE)
+        model.create("King",   3, 7, Chess.BoardModel.WHITE)
+        model.create("Queen",  4, 7, Chess.BoardModel.WHITE)
+        model.create("Bishop", 5, 7, Chess.BoardModel.WHITE)
+        model.create("Knight", 6, 7, Chess.BoardModel.WHITE)
+        model.create("Rook",   7, 7, Chess.BoardModel.WHITE)
     }
 }

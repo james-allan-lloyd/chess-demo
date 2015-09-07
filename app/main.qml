@@ -20,42 +20,10 @@ Window {
     }
 
 
-    function defaultSetup()
-    {
-        boardModel.clearPieces()
-        boardModel.create("Rook",   0, 0, Chess.BoardModel.BLACK)
-        boardModel.create("Knight", 1, 0, Chess.BoardModel.BLACK)
-        boardModel.create("Bishop", 2, 0, Chess.BoardModel.BLACK)
-        boardModel.create("Queen",  3, 0, Chess.BoardModel.BLACK)
-        // boardModel.create("King",   4, 0, Chess.BoardModel.BLACK)
-        boardModel.create("Bishop", 5, 0, Chess.BoardModel.BLACK)
-        boardModel.create("Knight", 6, 0, Chess.BoardModel.BLACK)
-        boardModel.create("Rook",   7, 0, Chess.BoardModel.BLACK)
-
-        for(var i=0; i<8; ++i)
-        {
-            boardModel.create("Pawn", i, 1, Chess.BoardModel.BLACK)
-        }
-
-        for(var i=0; i<8; ++i)
-        {
-            boardModel.create("Pawn", i, 6, Chess.BoardModel.WHITE)
-        }
-
-        boardModel.create("Rook",   0, 7, Chess.BoardModel.WHITE)
-        boardModel.create("Knight", 1, 7, Chess.BoardModel.WHITE)
-        boardModel.create("Bishop", 2, 7, Chess.BoardModel.WHITE)
-        // boardModel.create("King",   3, 7, Chess.BoardModel.WHITE)
-        boardModel.create("Queen",  4, 7, Chess.BoardModel.WHITE)
-        boardModel.create("Bishop", 5, 7, Chess.BoardModel.WHITE)
-        boardModel.create("Knight", 6, 7, Chess.BoardModel.WHITE)
-        boardModel.create("Rook",   7, 7, Chess.BoardModel.WHITE)
-
-    }
 
     function setupBoard()
     {
-        defaultSetup()
+        boardView.resetToDefault()
         // boardModel.clearPieces()
         // boardModel.createPawn(4, 0, Chess.BoardModel.BLACK)
         // boardModel.createPawn(4, 7, Chess.BoardModel.WHITE)
