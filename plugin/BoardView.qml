@@ -40,27 +40,34 @@ Rectangle {
                     visible: boardview.selectedPiece ? boardview.selectedPiece.isValidMove(Qt.point(cellX, cellY)) : false
                 }
 
-                Rectangle {
+                // Rectangle {
+                //     visible: modelData
+                //     radius: width/2;
+                //     anchors.fill: parent
+                //     color: labelText
+
+                //     Rectangle {
+                //         width: parent.width - 4
+                //         height: parent.height - 4
+                //         radius: width/2
+                //         color: labelColor
+                //         anchors.centerIn: parent
+                //     }
+
+                //     Text {
+                //         text: label
+                //         color: labelText
+                //         anchors.centerIn: parent
+                //     }
+                // }
+
+                Image {
+                    source: modelData ? modelData.image : ""
+                    sourceSize.width: cellSize - 4;
+                    sourceSize.height: cellSize - 4;
                     visible: modelData
-                    radius: width/2;
-                    anchors.fill: parent
-                    color: labelText
-
-                    Rectangle {
-                        width: parent.width - 4
-                        height: parent.height - 4
-                        radius: width/2
-                        color: labelColor
-                        anchors.centerIn: parent
-                    }
-
-                    Text {
-                        text: label
-                        color: labelText
-                        anchors.centerIn: parent
-                    }
+                    anchors.centerIn: parent
                 }
-
 
                 MouseArea {
                     anchors.fill: parent
@@ -98,6 +105,7 @@ Rectangle {
             }
         }
     }
+
 
 
     function cell(x, y)

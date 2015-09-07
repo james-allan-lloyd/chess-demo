@@ -18,6 +18,7 @@ class Piece : public QObject
     Q_PROPERTY(bool isWhite READ isWhite NOTIFY colorChanged)
     Q_PROPERTY(QPoint currentPosition READ currentPosition)
     Q_PROPERTY(ChessBoardModel::PieceColor color READ color WRITE setColor NOTIFY colorChanged)
+    Q_PROPERTY(QString image READ image)
 
     ChessBoardModel* board_;
     // int m_index;
@@ -102,6 +103,8 @@ public slots:
 public:
     // FIXME: make pure rather than empty
     virtual void recalculateMoves();
+
+    QString image() const;
 
 protected:
     void projectMovement(int xStep, int yStep, QSet<QPoint>& validMoves);

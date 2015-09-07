@@ -1,13 +1,13 @@
 import QtQuick 2.3
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
+import QtQuick.Dialogs 1.0
 import com.luxoft.Chess 1.0 as Chess
 
 Window {
     id: root
     visible: true
     title: "Chess 1.0"
-    // property var model: Chess.BoardModel
     width: 500
     height: 500
     property string state: "main"
@@ -50,6 +50,7 @@ Window {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.state == "playing"
+                onClicked: saveFileDialog.visible = true
             }
 
             Button {
@@ -67,6 +68,7 @@ Window {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.state == "main" || root.state == "replaying"
+                onClicked: loadFileDialog.visible = true
             }
         }
     }
@@ -117,6 +119,18 @@ Window {
         }
     }
 
+    FileDialog {
+        id: loadFileDialog
+        title: "Load game"
+        onAccepted: loadGame()
+    }
+
+    FileDialog {
+        id: saveFileDialog
+        title: "Save game"
+        onAccepted: saveGame()
+    }
+
     function setupBoard()
     {
         boardView.resetToDefault()
@@ -142,5 +156,15 @@ Window {
         boardModel.clearPieces()
     }
 
+    function loadGame()
+    {
+        state = "replaying"
+        boardModel.clearPieces()
+    }
+
+
+    function saveGame()
+    {
+    }
 }
 

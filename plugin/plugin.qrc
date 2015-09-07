@@ -1,5 +1,23 @@
 <RCC>
     <qresource prefix="/">
         <file>BoardView.qml</file>
+        <file>images/games-chess-bishop.svg</file>
+        <file>images/games-chess-king.svg</file>
+        <file>images/games-chess-knight.svg</file>
+        <file>images/games-chess-pawn.svg</file>
+        <file>images/games-chess-queen.svg</file>
+        <file>images/games-chess-rook.svg</file>
+        <file>images/games-chess-bishop-black.png</file>
+        <file>images/games-chess-bishop-white.png</file>
+        <file>images/games-chess-king-black.png</file>
+        <file>images/games-chess-king-white.png</file>
+        <file>images/games-chess-knight-black.png</file>
+        <file>images/games-chess-knight-white.png</file>
+        <file>images/games-chess-pawn-black.png</file>
+        <file>images/games-chess-pawn-white.png</file>
+        <file>images/games-chess-queen-black.png</file>
+        <file>images/games-chess-queen-white.png</file>
+        <file>images/games-chess-rook-black.png</file>
+        <file>images/games-chess-rook-white.png</file>
     </qresource>
 </RCC>

@@ -6,6 +6,12 @@ void Piece::recalculateMoves()
 {
 }
 
+QString Piece::image() const
+{
+    QString colorString = color() == ChessBoardModel::BLACK ? "black" : "white";
+    return "qrc:/images/games-chess-"+objectName().toLower()+"-"+colorString+".png";
+}
+
 void Piece::projectMovement(int xStep, int yStep, QSet<QPoint>& validMoves)
 {
     QPoint p = currentPosition();

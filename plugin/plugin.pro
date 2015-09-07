@@ -31,7 +31,20 @@ HEADERS += \
     knight.h \
     king.h
 
-DISTFILES = qmldir
+DISTFILES = qmldir \
+    THANKS \
+    images/games-chess-bishop-black.png \
+    images/games-chess-bishop-white.png \
+    images/games-chess-king-black.png \
+    images/games-chess-king-white.png \
+    images/games-chess-knight-black.png \
+    images/games-chess-knight-white.png \
+    images/games-chess-pawn-black.png \
+    images/games-chess-pawn-white.png \
+    images/games-chess-queen-black.png \
+    images/games-chess-queen-white.png \
+    images/games-chess-rook-black.png \
+    images/games-chess-rook-white.png
 
 !equals(_PRO_FILE_PWD_, $$OUT_PWD) {
     copy_qmldir.target = $$OUT_PWD/qmldir
