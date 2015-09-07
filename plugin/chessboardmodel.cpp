@@ -5,18 +5,19 @@
 #include "rook.h"
 #include "bishop.h"
 #include "knight.h"
+#include "king.h"
 
 
 ChessBoardModel::ChessBoardModel(QObject* parent)
     : QAbstractListModel(parent)
     , cells_(64, NULL)
 {
-    // cells_[0] = new Piece("Pawn");
     pieceFactory_["queen"] = [this]() -> Piece* { return new Queen(this); };
     pieceFactory_["pawn"] = [this]() -> Piece* { return new Pawn(this); };
     pieceFactory_["rook"] = [this]() -> Piece* { return new Rook(this); };
     pieceFactory_["bishop"] = [this]() -> Piece* { return new Bishop(this); };
     pieceFactory_["knight"] = [this]() -> Piece* { return new Knight(this); };
+    pieceFactory_["king"] = [this]() -> Piece* { return new King(this); };
 }
 
 ChessBoardModel::~ChessBoardModel()

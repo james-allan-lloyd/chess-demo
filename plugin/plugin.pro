@@ -16,7 +16,8 @@ SOURCES += \
     queen.cpp \
     rook.cpp \
     bishop.cpp \
-    knight.cpp
+    knight.cpp \
+    king.cpp
 
 HEADERS += \
     plugin_plugin.h \
@@ -27,7 +28,8 @@ HEADERS += \
     queen.h \
     rook.h \
     bishop.h \
-    knight.h
+    knight.h \
+    king.h
 
 DISTFILES = qmldir
 

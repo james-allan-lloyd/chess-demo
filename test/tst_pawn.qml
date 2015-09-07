@@ -37,7 +37,7 @@ Rectangle {
         function test_pawnsActuallyMovesForward() {
             var pawn = board.createPawn(0, 0)
             verify(pawn.moveTo(Qt.point(0,1)), "Pawn should move forward")
-            verify(!pawn.moveTo(Qt.point(1,1)), "Pawn should not move diagnally without opponent piece")
+            verify(!pawn.moveTo(Qt.point(1,1)), "Pawn should not move diagonally without opponent piece")
             compare(pawn.currentPosition, Qt.point(0,1), "Pawn is in the correct position")
         }
 
