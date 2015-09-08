@@ -53,7 +53,6 @@ public:
 
     int pieceCount() const { return pieces_.size(); }
     bool movePiece(Piece* piece, QPoint position);
-    Q_INVOKABLE Piece* createPawn(int x, int y, PieceColor color = BLACK);
     Q_INVOKABLE Piece* create(QString name, int x, int y, PieceColor color = BLACK);
     Q_INVOKABLE void clearPieces();
 

@@ -48,7 +48,7 @@ TestCase {
     }
 
     function test_itCreatesPawns() {
-        var pawn = board.createPawn(0, 0)
+        var pawn = board.create("pawn", 0, 0)
         verify(pawn, "Creating a pawn shall not return null")
         compare(board.pieceCount, 1, "The piece shall be created on the board")
 
@@ -61,7 +61,7 @@ TestCase {
     }
 
     function test_pawnsCanMoveForward() {
-        var pawn = board.createPawn(0, 0)
+        var pawn = board.create("pawn", 0, 0)
         verify(pawn.isValidMove(Qt.point(0,1)), "Pawn should move forward")
         verify(!pawn.isValidMove(Qt.point(1,1)), "Pawn should not move diagnally without opponent piece")
     }
@@ -69,16 +69,16 @@ TestCase {
 
     function test_cannotCreatePawnsOutsideBoard()
     {
-        verify(!board.createPawn(8,0))
-        verify(!board.createPawn(0,8))
-        verify(!board.createPawn(-1,0))
-        verify(!board.createPawn(0,-1))
+        verify(!board.create("pawn", 8,0))
+        verify(!board.create("pawn", 0,8))
+        verify(!board.create("pawn", -1,0))
+        verify(!board.create("pawn", 0,-1))
     }
 
     function test_cannotCreatePiecesInOccupiedCells()
     {
-        board.createPawn(0, 0)
-        verify(!board.createPawn(0, 0))
+        board.create("pawn", 0, 0)
+        verify(!board.create("pawn", 0, 0))
     }
 
 
@@ -87,14 +87,14 @@ TestCase {
     function test_creationEmitsSignal()
     {
         var initialValue = dataChangedSpy.count
-        board.createPawn(4,4)
+        board.create("pawn", 4,4)
         compare(initialValue + 1, dataChangedSpy.count)
     }
 
 
     function test_creatingWhitePieces()
     {
-        var whitePawn = board.createPawn(0, 7, Chess.BoardModel.WHITE)
+        var whitePawn = board.create("pawn", 0, 7, Chess.BoardModel.WHITE)
         verify(whitePawn, "Pawn is created successfully")
         compare(whitePawn.color, Chess.BoardModel.WHITE)
 
@@ -104,7 +104,7 @@ TestCase {
 
     function test_removingPieces()
     {
-        var pawn = board.createPawn(0, 0)
+        var pawn = board.create("pawn", 0, 0)
         verify(pawn)
         board.removePiece(pawn)
         compare(board.pieceCount, 0, "Board is empty after removing only piece")
@@ -113,8 +113,8 @@ TestCase {
 
     function test_pawnsTakingEnemyPieces()
     {
-        var blackPawn = board.createPawn(0, 0, Chess.BoardModel.BLACK)
-        var whitePawn = board.createPawn(1, 1, Chess.BoardModel.WHITE)
+        var blackPawn = board.create("pawn", 0, 0, Chess.BoardModel.BLACK)
+        var whitePawn = board.create("pawn", 1, 1, Chess.BoardModel.WHITE)
 
         verify(blackPawn.isValidMove(Qt.point(1, 1)), "Black pawn can attack white pawn")
         verify(whitePawn.isValidMove(Qt.point(0, 0)), "White pawn can attack black pawn")
@@ -130,8 +130,8 @@ TestCase {
 
     function test_pawnsCantTakeAllyPieces()
     {
-        var blackPawn1 = board.createPawn(0, 0, Chess.BoardModel.BLACK)
-        var blackPawn2 = board.createPawn(1, 1, Chess.BoardModel.BLACK)
+        var blackPawn1 = board.create("pawn", 0, 0, Chess.BoardModel.BLACK)
+        var blackPawn2 = board.create("pawn", 1, 1, Chess.BoardModel.BLACK)
 
         verify(!blackPawn1.isValidMove(Qt.point(1, 1)), "Black pawn will not attack other black pawn")
     }

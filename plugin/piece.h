@@ -14,11 +14,11 @@ class Piece : public QObject
 {
     Q_OBJECT
     // Q_PROPERTY(int index READ index WRITE setIndex)
-    Q_PROPERTY(bool isBlack READ isBlack NOTIFY colorChanged)
-    Q_PROPERTY(bool isWhite READ isWhite NOTIFY colorChanged)
+    Q_PROPERTY(bool isBlack READ isBlack CONSTANT)
+    Q_PROPERTY(bool isWhite READ isWhite CONSTANT)
     Q_PROPERTY(QPoint currentPosition READ currentPosition)
     Q_PROPERTY(ChessBoardModel::PieceColor color READ color WRITE setColor NOTIFY colorChanged)
-    Q_PROPERTY(QString image READ image)
+    Q_PROPERTY(QString image READ image CONSTANT)
 
     ChessBoardModel* board_;
     // int m_index;

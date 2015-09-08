@@ -115,10 +115,6 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
     return true;
 }
 
-Piece* ChessBoardModel::createPawn(int x, int y, PieceColor color)
-{
-    return create("pawn", x, y, color);
-}
 
 Piece* ChessBoardModel::create(QString name, int x, int y, ChessBoardModel::PieceColor color)
 {

@@ -26,18 +26,26 @@ Rectangle {
                 property int cellX: index % 8
                 property int cellY: Math.floor(index / 8)
                 property string label: modelData ? modelData.objectName : ""
+                property string pieceColor: (!modelData || modelData.isBlack) ? "black" : "white"
                 property color labelColor: (!modelData || modelData.isBlack) ? "black" : "white"
                 property color labelText: (!modelData || modelData.isBlack) ? "white" : "black"
 
-                color: ((cellX%2) == (cellY%2)) ? "gray" : "white"
+                color: ((cellX%2) == (cellY%2)) ? "lightGray" : "white"
                 width: boardview.cellSize
                 height: boardview.cellSize
 
                 Rectangle {
                     id: validMoveDisplay
                     anchors.fill: parent
-                    color: "yellow"
+                    color: "#20FFFF00"
                     visible: boardview.selectedPiece ? boardview.selectedPiece.isValidMove(Qt.point(cellX, cellY)) : false
+                }
+
+                Rectangle {
+                    id: selectablePieceDisplay
+                    anchors.fill: parent
+                    color: "#200000FF"
+                    visible: !boardview.selectedPiece && modelData && boardview.currentPlayer == pieceColor
                 }
 
                 // Rectangle {

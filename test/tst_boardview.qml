@@ -36,7 +36,7 @@ Rectangle {
 
         function test_createdPieceIsDisplayed()
         {
-            model.createPawn(0, 0)
+            model.create("pawn", 0, 0)
             compare(view.cells.itemAt(0).label, "Pawn")
         }
 
@@ -48,7 +48,7 @@ Rectangle {
 
         function test_movePiece()
         {
-            var pawn = model.createPawn(0, 7, Chess.BoardModel.WHITE)
+            var pawn = model.create("pawn", 0, 7, Chess.BoardModel.WHITE)
             // mouseClick(view.cell(0, 0))
             mouseClick(view.cell(0, 7), 5, 5)
             compare(view.selectedPiece, pawn, "Pawn is selected")
@@ -69,7 +69,7 @@ Rectangle {
         function test_movingPieceToInvalidPosition()
         {
             var invalidPosition = Qt.point(7, 7)
-            var pawn = model.createPawn(0, 0, Chess.BoardModel.WHITE)
+            var pawn = model.create("pawn", 0, 0, Chess.BoardModel.WHITE)
             mouseClick(view.cell(0, 0), 5, 5)
             compare(view.selectedPiece, pawn, "Pawn is selected")
             mouseClick(view.cell(invalidPosition.x, invalidPosition.y), 5, 5)
@@ -79,7 +79,7 @@ Rectangle {
 
         function test_validMovesAreDisplayed()
         {
-            var pawn = model.createPawn(0, 7, Chess.BoardModel.WHITE)
+            var pawn = model.create("pawn", 0, 7, Chess.BoardModel.WHITE)
             mouseClick(view.cell(0, 7), 5, 5)
 
             verify(pawn.isValidMove(Qt.point(0,6)), "Pawn can move 1")
@@ -92,8 +92,8 @@ Rectangle {
 
         function test_pieceColorsAreDisplayed()
         {
-            var blackPawn = model.createPawn(0,0, Chess.BoardModel.BLACK)
-            var whitePawn = model.createPawn(0,7, Chess.BoardModel.WHITE)
+            var blackPawn = model.create("pawn", 0,0, Chess.BoardModel.BLACK)
+            var whitePawn = model.create("pawn", 0,7, Chess.BoardModel.WHITE)
 
             verify(Qt.colorEqual(view.cell(0,0).labelColor, "black"))
             verify(Qt.colorEqual(view.cell(0,7).labelColor, "white"))
@@ -109,8 +109,8 @@ Rectangle {
         {
             compare(view.currentPlayer, "white");
 
-            var blackPawn = model.createPawn(0,0, Chess.BoardModel.BLACK)
-            var whitePawn = model.createPawn(0,7, Chess.BoardModel.WHITE)
+            var blackPawn = model.create("pawn", 0,0, Chess.BoardModel.BLACK)
+            var whitePawn = model.create("pawn", 0,7, Chess.BoardModel.WHITE)
 
             mouseClick(view.cell(0, 0), 5, 5)
             compare(view.selectedPiece, null)
@@ -124,8 +124,8 @@ Rectangle {
         {
             compare(view.currentPlayer, "white");
 
-            var blackPawn = model.createPawn(0,0, Chess.BoardModel.BLACK)
-            var whitePawn = model.createPawn(0,7, Chess.BoardModel.WHITE)
+            var blackPawn = model.create("pawn", 0,0, Chess.BoardModel.BLACK)
+            var whitePawn = model.create("pawn", 0,7, Chess.BoardModel.WHITE)
 
             mouseClick(view.cell(0,7), 5, 5)
             compare(view.selectedPiece, whitePawn)
