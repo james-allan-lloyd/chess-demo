@@ -2,10 +2,6 @@
 
 #include <QDebug>
 
-void Piece::recalculateMoves()
-{
-}
-
 QString Piece::image() const
 {
     QString colorString = color() == ChessBoardModel::BLACK ? "black" : "white";

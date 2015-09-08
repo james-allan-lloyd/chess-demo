@@ -13,7 +13,6 @@ inline uint qHash(const QPoint &key) { return (key.x() << 16) + key.y(); }
 class Piece : public QObject
 {
     Q_OBJECT
-    // Q_PROPERTY(int index READ index WRITE setIndex)
     Q_PROPERTY(bool isBlack READ isBlack CONSTANT)
     Q_PROPERTY(bool isWhite READ isWhite CONSTANT)
     Q_PROPERTY(QPoint position READ position)
@@ -21,7 +20,6 @@ class Piece : public QObject
     Q_PROPERTY(QString image READ image CONSTANT)
 
     ChessBoardModel* board_;
-    // int m_index;
     bool hasMoved_;
 
     ChessBoardModel::PieceColor color_;
@@ -75,11 +73,6 @@ public:
     }
 
 public slots:
-    // void setIndex(int index)
-    // {
-    //     m_index = index;
-    // }
-
     bool moveTo(QPoint p)
     {
         bool result = board_->movePiece(this, p);
@@ -101,8 +94,7 @@ public slots:
     }
 
 public:
-    // FIXME: make pure rather than empty
-    virtual void recalculateMoves();
+    virtual void recalculateMoves() = 0;
 
     QString image() const;
 
