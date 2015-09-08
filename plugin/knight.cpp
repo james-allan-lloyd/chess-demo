@@ -23,7 +23,7 @@ void Knight::recalculateMoves()
     validMoves_.clear();
     foreach(QPoint p, knightVectors_)
     {
-        QPoint targetPoint = currentPosition() + p;
+        QPoint targetPoint = position() + p;
         if(targetPoint.x() < 0 || targetPoint.y() < 0 || targetPoint.x() > 7 || targetPoint.y() > 7)
         {
             continue;

@@ -20,7 +20,7 @@ void King::recalculateMoves()
         {
             if(x != 0 || y != 0)
             {
-                QPoint p = currentPosition() + QPoint(x, y);
+                QPoint p = position() + QPoint(x, y);
                 Piece* occupied = board()->cell(p);
                 if(!occupied || occupied->color() != color())
                 {

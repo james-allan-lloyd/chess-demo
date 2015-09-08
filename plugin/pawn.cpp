@@ -24,13 +24,13 @@ void Pawn::recalculateMoves()
         direction = -1;
     }
 
-    QPoint oneMove = currentPosition() + QPoint(0, direction);
+    QPoint oneMove = position() + QPoint(0, direction);
     if(board()->isValidPosition(oneMove) && !board()->cell(oneMove))
     {
         validMoves_.insert(oneMove);
         if(!hasMoved())
         {
-            QPoint twoMove = currentPosition() + QPoint(0, 2*direction);
+            QPoint twoMove = position() + QPoint(0, 2*direction);
             if(board()->isValidPosition(twoMove) && !board()->cell(twoMove))
             {
                 validMoves_.insert(twoMove);
@@ -38,14 +38,14 @@ void Pawn::recalculateMoves()
         }
     }
 
-    QPoint leftAttack = currentPosition() + QPoint(1,direction*1);
+    QPoint leftAttack = position() + QPoint(1,direction*1);
     Piece* leftAttackPiece = board()->cell(leftAttack);
     if(leftAttackPiece && leftAttackPiece->color() != color())
     {
         validMoves_.insert(leftAttack);
     }
 
-    QPoint rightAttack = currentPosition() + QPoint(-1,direction*1);
+    QPoint rightAttack = position() + QPoint(-1,direction*1);
     Piece* rightAttackPiece = board()->cell(rightAttack);
     if(rightAttackPiece && rightAttackPiece->color() != color())
     {

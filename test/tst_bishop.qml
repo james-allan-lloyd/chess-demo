@@ -26,7 +26,7 @@ Rectangle {
 
         function checkDirection(piece, xdir, ydir)
         {
-            var p = piece.currentPosition;
+            var p = piece.position;
             p = Qt.point(p.x + xdir, p.y + ydir)
             while(p.x >= 0 && p.y >= 0 && p.x <= 7 && p.y <= 7)
             {

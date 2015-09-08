@@ -29,5 +29,5 @@ void Queen::recalculateMoves()
     projectMovement(1, -1, validMoves_); // right, top
     projectMovement(1, 1, validMoves_);  // right, bottom
 
-    Q_ASSERT(!validMoves_.contains(currentPosition()));
+    Q_ASSERT(!validMoves_.contains(position()));
 }

@@ -53,7 +53,7 @@ Rectangle {
             mouseClick(view.cell(0, 7), 5, 5)
             compare(view.selectedPiece, pawn, "Pawn is selected")
             mouseClick(view.cell(0, 6), 5, 5)
-            comparePoint(pawn.currentPosition, Qt.point(0, 6), "Pawn has correct position")
+            comparePoint(pawn.position, Qt.point(0, 6), "Pawn has correct position")
             compare(view.selectedPiece, null, "Pawn is no longer selected")
         }
 
@@ -73,7 +73,7 @@ Rectangle {
             mouseClick(view.cell(0, 0), 5, 5)
             compare(view.selectedPiece, pawn, "Pawn is selected")
             mouseClick(view.cell(invalidPosition.x, invalidPosition.y), 5, 5)
-            comparePoint(pawn.currentPosition, Qt.point(0,0), "Pawn has not moved")
+            comparePoint(pawn.position, Qt.point(0,0), "Pawn has not moved")
         }
 
 
@@ -130,7 +130,7 @@ Rectangle {
             mouseClick(view.cell(0,7), 5, 5)
             compare(view.selectedPiece, whitePawn)
             mouseClick(view.cell(0,6), 5, 5)
-            comparePoint(whitePawn.currentPosition, Qt.point(0,6))
+            comparePoint(whitePawn.position, Qt.point(0,6))
 
             compare(view.currentPlayer, "black");
             mouseClick(view.cell(0,0), 5, 5)
@@ -141,7 +141,7 @@ Rectangle {
             mouseClick(view.cell(0,0), 5, 5)
             compare(view.selectedPiece, blackPawn)
             mouseClick(view.cell(0,1), 5, 5) // valid move
-            comparePoint(blackPawn.currentPosition, Qt.point(0,1))
+            comparePoint(blackPawn.position, Qt.point(0,1))
 
             compare(view.currentPlayer, "white");
         }

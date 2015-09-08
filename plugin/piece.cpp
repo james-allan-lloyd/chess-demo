@@ -14,7 +14,7 @@ QString Piece::image() const
 
 void Piece::projectMovement(int xStep, int yStep, QSet<QPoint>& validMoves)
 {
-    QPoint p = currentPosition();
+    QPoint p = position();
     p += QPoint(xStep, yStep);
     while(p.x() >= 0 && p.y() >= 0 && p.x() <= 7 && p.y() <= 7)
     {

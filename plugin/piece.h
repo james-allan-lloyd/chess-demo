@@ -16,7 +16,7 @@ class Piece : public QObject
     // Q_PROPERTY(int index READ index WRITE setIndex)
     Q_PROPERTY(bool isBlack READ isBlack CONSTANT)
     Q_PROPERTY(bool isWhite READ isWhite CONSTANT)
-    Q_PROPERTY(QPoint currentPosition READ currentPosition)
+    Q_PROPERTY(QPoint position READ position)
     Q_PROPERTY(ChessBoardModel::PieceColor color READ color WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(QString image READ image CONSTANT)
 
@@ -44,7 +44,7 @@ public:
         return position_.x() + position_.y() * 8;
     }
 
-    QPoint currentPosition() const
+    QPoint position() const
     {
         return position_;
     }
