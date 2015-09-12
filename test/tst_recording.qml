@@ -124,6 +124,52 @@ Rectangle {
         {
 
         }
+
+
+        function test_undoMove()
+        {
+            var pawn = recorder.create("pawn", 0, 0)
+            verify(recorder.move(pawn, 0, 1))
+            verify(!board.cell(0, 0))
+            verify(board.cell(0, 1))
+            verify(recorder.undo())
+            verify(board.cell(0, 0))
+            verify(!board.cell(0, 1))
+        }
+
+        function test_invalidMovesAreNotRecorded()
+        {
+        }
+
+        function test_undoTake()
+        {
+            var pawn = recorder.create("pawn", 0, 0)
+            verify(recorder.move(pawn, 0, 1))
+
+            var blackPawn = board.create("pawn", 0, 0, Chess.BoardModel.BLACK);
+            var whitePawn = board.create("pawn", 1, 1, Chess.BoardModel.WHITE);
+
+            verify(recorder.move(blackPawn, 1, 1))
+            verify(recorder.undo())
+            verify(board.cell(1,1))
+            compare(board.cell(1,1).color, Chess.BoardModel.WHITE, "Taken piece is restored")
+        }
+
+
+        function test_redoTake()
+        {
+            var pawn = recorder.create("pawn", 0, 0)
+            verify(recorder.move(pawn, 0, 1))
+
+            var blackPawn = board.create("pawn", 0, 0, Chess.BoardModel.BLACK);
+            var whitePawn = board.create("pawn", 1, 1, Chess.BoardModel.WHITE);
+
+            verify(recorder.move(blackPawn, 1, 1), "White pawn is taken")
+            verify(recorder.undo())
+            verify(recorder.redo(), "Move is redone")
+            verify(!board.cell(0, 0), "Black pawn has moved")
+            compare(board.cell(1,1).color, Chess.BoardModel.BLACK, "Black now occupies (1,1)")
+        }
     }
 }
 

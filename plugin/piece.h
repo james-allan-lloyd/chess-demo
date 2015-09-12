@@ -35,6 +35,10 @@ public:
         setObjectName(name);
     }
 
+    virtual ~Piece()
+    {
+    }
+
     Q_INVOKABLE virtual bool isValidMove(QPoint a) const = 0;
 
     int index() const
