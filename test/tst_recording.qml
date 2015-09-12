@@ -86,11 +86,26 @@ Rectangle {
 
         function test_actionsNotRecordedUnlessAtEndOfHistory()
         {
-
+            recorder.create("pawn", 0, 0)
+            recorder.undo()
+            verify(!recorder.create("pawn", 0, 1), "Can't create unless at end of history")
+            verify(!board.cell(Qt.point(0, 1)), "Nothing was created")
         }
 
         function test_multipleUndoRedo()
         {
+            recorder.create("pawn", 0, 0)
+            recorder.create("pawn", 0, 1)
+            verify(recorder.undo())
+            verify(recorder.undo())
+            verify(!board.cell(0, 0))
+            verify(!board.cell(0, 1))
+            verify(recorder.redo())
+            verify(board.cell(0, 0))
+            verify(!board.cell(0, 1))
+            verify(recorder.redo())
+            verify(board.cell(0, 1))
+            verify(board.cell(0, 0))
 
         }
 

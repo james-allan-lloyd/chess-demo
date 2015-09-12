@@ -48,6 +48,11 @@ public:
     Q_INVOKABLE Piece* cell(QPoint p);
     const Piece* cell(QPoint p) const;
 
+    Q_INVOKABLE Piece* cell(int x, int y)
+    {
+        return cell(QPoint(x, y));
+    }
+
     Q_INVOKABLE void removePiece(Piece* piece);
 
     // QAbstractItemModel methods

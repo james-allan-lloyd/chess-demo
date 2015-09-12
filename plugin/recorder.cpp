@@ -20,12 +20,15 @@ public:
 public:
     bool undo(ChessBoardModel* model) override
     {
+        // qDebug() << "Undo creation " << name_ << x_ << y_;
         model->removePiece(model->cell(QPoint(x_, y_)));
+        Q_ASSERT(!model->cell(QPoint(x_, y_)));
         return true;
     }
 
     bool redo(ChessBoardModel* model) override
     {
+        // qDebug() << "Redo creation" << name_ << x_ << y_;
         Piece* piece = model->create(name_, x_, y_, color_);
         return piece != NULL;
     }
@@ -70,6 +73,10 @@ ChessBoardModel::PieceColor colorFromString(const QString& colorString)
 Piece* Recorder::create(const QString& name, int x, int y, const QString& colorString)
 {
     if(!model_)
+    {
+        return NULL;
+    }
+    if(nextUndo_ != actions_.size() - 1)
     {
         return NULL;
     }
