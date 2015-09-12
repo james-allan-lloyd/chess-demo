@@ -1,6 +1,6 @@
 TEMPLATE = lib
 TARGET = chess_plugin
-QT += qml quick
+QT += qml quick xml
 CONFIG += qt plugin c++11
 
 TARGET = $$qtLibraryTarget($$TARGET)

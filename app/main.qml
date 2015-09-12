@@ -122,13 +122,14 @@ Window {
     FileDialog {
         id: loadFileDialog
         title: "Load game"
-        onAccepted: loadGame()
+        onAccepted: loadGame(fileUrl)
     }
 
     FileDialog {
         id: saveFileDialog
+        selectExisting: false
         title: "Save game"
-        onAccepted: saveGame()
+        onAccepted: saveGame(fileUrl)
     }
 
     function setupBoard()
@@ -156,15 +157,16 @@ Window {
         boardModel.clearPieces()
     }
 
-    function loadGame()
+    function loadGame(filename)
     {
         state = "replaying"
-        boardModel.clearPieces()
+        boardModel.load(filename)
     }
 
 
-    function saveGame()
+    function saveGame(filename)
     {
+        boardModel.save(filename)
     }
 }
 

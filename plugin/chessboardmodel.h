@@ -8,6 +8,7 @@
 #include <functional>
 
 class Piece;
+class QXmlStreamReader;
 
 class ChessBoardModel : public QAbstractListModel
 {
@@ -19,6 +20,9 @@ class ChessBoardModel : public QAbstractListModel
 
     typedef std::function<Piece*()> FactoryFunction;
     QMap<QString, FactoryFunction> pieceFactory_;
+
+    class Writer;
+    Writer* writer_;
 public:
     enum PieceRoles {
         ValidMoves = Qt::UserRole + 1,
@@ -55,8 +59,16 @@ public:
     bool movePiece(Piece* piece, QPoint position);
     Q_INVOKABLE Piece* create(QString name, int x, int y, PieceColor color = BLACK);
     Q_INVOKABLE void clearPieces();
+    Q_INVOKABLE bool save(const QString& filename);
+    Q_INVOKABLE bool load(const QString& filename);
 
     bool isValidPosition(const QPoint& p) const;
+
+private:
+    bool readEvents(QXmlStreamReader& xml);
+    bool readCreate(QXmlStreamReader& xml);
+    bool readMove(QXmlStreamReader& xml);
+
 
 signals:
     void pieceCountChanged(int newPieceCount);

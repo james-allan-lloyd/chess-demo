@@ -6,5 +6,6 @@
         <file>tst_bishop.qml</file>
         <file>tst_knight.qml</file>
         <file>tst_king.qml</file>
+        <file>tst_recording.qml</file>
     </qresource>
 </RCC>
