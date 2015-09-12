@@ -29,7 +29,7 @@ public:
 
     ChessBoardModel* model() const;
 
-    Q_INVOKABLE Piece* create(const QString& name, int x, int y);
+    Q_INVOKABLE Piece* create(const QString& name, int x, int y, const QString& colorString = QString("black"));
 
     Q_INVOKABLE bool undo();
     Q_INVOKABLE bool redo();

@@ -6,11 +6,13 @@ class CreateAction : public Recorder::Action
     QString name_;
     int x_;
     int y_;
+    ChessBoardModel::PieceColor color_;
 public:
-    CreateAction(const QString& name, int x, int y)
+    CreateAction(const QString& name, int x, int y, ChessBoardModel::PieceColor color)
         : name_(name)
         , x_(x)
         , y_(y)
+        , color_(color)
     {
     }
 
@@ -24,7 +26,7 @@ public:
 
     bool redo(ChessBoardModel* model) override
     {
-        Piece* piece = model->create(name_, x_, y_);
+        Piece* piece = model->create(name_, x_, y_, color_);
         return piece != NULL;
     }
 };
@@ -48,16 +50,34 @@ ChessBoardModel* Recorder::model() const
     return model_;
 }
 
-Piece* Recorder::create(const QString& name, int x, int y)
+ChessBoardModel::PieceColor colorFromString(const QString& colorString)
+{
+    QString lowerColorString = colorString.toLower();
+
+    if(lowerColorString == "white")
+    {
+        return ChessBoardModel::WHITE;
+    }
+    else if(lowerColorString == "black")
+    {
+        return ChessBoardModel::BLACK;
+    }
+
+    qWarning() << "Unknown color" << colorString << " defaulting to black";
+    return ChessBoardModel::BLACK;
+}
+
+Piece* Recorder::create(const QString& name, int x, int y, const QString& colorString)
 {
     if(!model_)
     {
         return NULL;
     }
-    Piece* result = model_->create(name, x, y);
+    ChessBoardModel::PieceColor col = colorFromString(colorString);
+    Piece* result = model_->create(name, x, y, col);
     if(result)
     {
-        actions_.push_back(new CreateAction(name, x, y));
+        actions_.push_back(new CreateAction(name, x, y, col));
         nextUndo_ = actions_.size() - 1;
     }
     return result;

@@ -76,16 +76,13 @@ Rectangle {
 
         function test_redoCreate()
         {
-            var pawn = recorder.create("pawn", 0, 0)
+            var pawn = recorder.create("pawn", 0, 0, "white")
             verify(recorder.undo())
             verify(recorder.redo(), "Redo was successful")
             verify(board.cell(Qt.point(0,0)), "Piece exists")
+            compare(board.cell(Qt.point(0,0)).color, Chess.BoardModel.WHITE, "Piece is correct color")
         }
 
-
-        function test_itRecordsCreationColor()
-        {
-        }
 
         function test_actionsNotRecordedUnlessAtEndOfHistory()
         {
