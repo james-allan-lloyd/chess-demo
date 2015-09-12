@@ -17,7 +17,8 @@ SOURCES += \
     rook.cpp \
     bishop.cpp \
     knight.cpp \
-    king.cpp
+    king.cpp \
+    recorder.cpp
 
 HEADERS += \
     plugin_plugin.h \
@@ -29,7 +30,8 @@ HEADERS += \
     rook.h \
     bishop.h \
     knight.h \
-    king.h
+    king.h \
+    recorder.h
 
 DISTFILES = qmldir \
     THANKS \

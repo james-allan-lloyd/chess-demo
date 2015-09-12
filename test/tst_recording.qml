@@ -21,6 +21,8 @@ Rectangle {
         function init()
         {
             board.clearPieces()
+            recorder.restart()
+            recorder.model = board
         }
 
         // function test_recordCreation()
@@ -48,7 +50,65 @@ Rectangle {
         //     verify(board.cell(Qt.point(0,1)) !== null, "Pawn is in moved position")
         // }
 
-        function test_undoMove()
+
+        function test_createWithoutModel()
+        {
+            recorder.model = null
+            var pawn = recorder.create("pawn", 0, 0)
+            verify(!pawn);
+        }
+
+        function test_undoCreate()
+        {
+            var pawn = recorder.create("pawn", 0, 0)
+            compare(pawn, board.cell(Qt.point(0,0)), "Recorder creates pieces in the model")
+
+            verify(recorder.undo(), "Undo was successful")
+            verify(!board.cell(Qt.point(0,0)), "The creation was undone, no piece in the given cell")
+        }
+
+        function test_invalidCreatesAreNotRecorded()
+        {
+            var pawn = recorder.create("pawn", 12, 120)
+            verify(!pawn, "Pawn was not created")
+            verify(!recorder.undo())
+        }
+
+        function test_redoCreate()
+        {
+            var pawn = recorder.create("pawn", 0, 0)
+            verify(recorder.undo())
+            verify(recorder.redo(), "Redo was successful")
+            verify(board.cell(Qt.point(0,0)), "Piece exists")
+        }
+
+
+        function test_itRecordsCreationColor()
+        {
+        }
+
+        function test_actionsNotRecordedUnlessAtEndOfHistory()
+        {
+
+        }
+
+        function test_multipleUndoRedo()
+        {
+
+        }
+
+        function test_noRedoUndoAfterRestart()
+        {
+            recorder.create("pawn", 0, 0)
+            verify(recorder.undo())
+            verify(recorder.redo())
+            recorder.restart()
+            verify(!recorder.undo(), "Undo not available after restart")
+            verify(!recorder.redo(), "Redo not available after restart")
+            verify(board.cell(Qt.point(0,0)))
+        }
+
+        function test_createsAreCompressed()
         {
 
         }
