@@ -12,6 +12,8 @@ Rectangle {
     property var selectedPiece: null
     property string currentPlayer: "white"
     property var recorder: recorder
+    property alias canUndo: recorder.canUndo
+    property alias canRedo: recorder.canRedo
 
     color: "red"  // Debugging size
 
@@ -147,7 +149,10 @@ Rectangle {
 
     function redo()
     {
-
+        if(recorder.redo())
+        {
+            currentPlayer = currentPlayer == "black" ? "white" : "black"
+        }
     }
 
 

@@ -1,6 +1,11 @@
 #include "recorder.h"
 #include "piece.h"
 
+#include <QFile>
+#include <QXmlStreamWriter>
+#include <QXmlStreamReader>
+#include <QDomDocument>
+#include <QUrl>
 
 class CreateAction : public Recorder::Action
 {
@@ -35,6 +40,11 @@ public:
         Piece* piece = model->create(name_, x_, y_, color_);
         return piece != NULL;
     }
+
+    void write(QDomDocument& doc) override
+    {
+
+    }
 };
 
 
@@ -48,7 +58,9 @@ class MoveAction : public Recorder::Action
     ChessBoardModel::PieceColor color_;
     ChessBoardModel::PieceColor takenColor_;
     QString takenName_;
+    bool takenHasMoved_;
     bool hadMoved_;
+
 public:
     MoveAction(Piece* piece, int oldX, int oldY, bool hadMoved)
         : name_(piece->objectName())
@@ -61,11 +73,11 @@ public:
     {}
 
 
-    void setTakenPiece(const QString& name, ChessBoardModel::PieceColor col)  // , bool hasMoved)
+    void setTakenPiece(const QString& name, ChessBoardModel::PieceColor col, bool hasMoved)
     {
         takenName_ = name;
         takenColor_ = col;
-        // takenHasMoved_ = hasMoved;
+        takenHasMoved_ = hasMoved;
     }
 
     bool undo(ChessBoardModel* model) override
@@ -79,7 +91,8 @@ public:
 
         if(!takenName_.isEmpty())
         {
-            model->create(takenName_, newX_, newY_, takenColor_);
+            Piece* piece = model->create(takenName_, newX_, newY_, takenColor_);
+            piece->markMoved(takenHasMoved_);
         }
         return true;
     }
@@ -91,6 +104,109 @@ public:
         piece->moveTo(QPoint(newX_, newY_));
         return true;
     }
+
+    void write(QDomDocument& doc) override
+    {
+        QDomElement moveElement = doc.createElement("move");
+        moveElement.setAttribute("name", name_);
+        moveElement.setAttribute("x", oldX_);
+        moveElement.setAttribute("y", oldY_);
+        moveElement.setAttribute("destX", newX_);
+        moveElement.setAttribute("destY", newY_);
+        moveElement.setAttribute("color", color_ == ChessBoardModel::BLACK ? "black" : "white");
+
+        if(!takenName_.isEmpty())
+        {
+            QDomElement takeElement = doc.createElement("takes");
+            takeElement.setAttribute("name", name_);
+            takeElement.setAttribute("x", oldX_);
+            takeElement.setAttribute("y", oldY_);
+            takeElement.setAttribute("destX", newX_);
+            takeElement.setAttribute("destY", newY_);
+            moveElement.appendChild(takeElement);
+        }
+        doc.documentElement().appendChild(moveElement);
+    }
+};
+
+
+
+class Recorder::Writer : public QObject
+{
+    QString filename_;
+    QDomDocument doc_;
+public:
+    Writer(const QString& filename)
+        : filename_(filename)
+        , doc_("currentGame")
+    {
+        clear();
+    }
+
+    const QString filename() const { return filename_; }
+
+    void clear()
+    {
+        QFile f(filename_);
+        if(!f.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        {
+            qWarning() << "Unable to save to: " << filename_;
+        }
+
+        QXmlStreamWriter out(&f);
+        out.setAutoFormatting(true);
+        out.writeStartDocument();
+
+        out.writeStartElement("chess");
+        out.writeAttribute("version", "1.0");
+        out.writeEndElement();
+
+        out.writeEndDocument();
+    }
+
+
+    void loadDoc()
+    {
+        QFile file(filename_);
+        if (!file.open(QIODevice::ReadOnly))
+            return;
+        if (!doc_.setContent(&file)) {
+            qWarning() << "Unable to load document from" << filename_;
+        }
+        file.close();
+    }
+
+
+    void saveDoc()
+    {
+        QFile file(filename_);
+        if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        {
+            return;
+        }
+        QTextStream textStream(&file);
+        doc_.save(textStream, 0);
+    }
+
+
+    void write(const QList<Action*>& actions)
+    {
+        loadDoc();
+        foreach(Action* action, actions)
+        {
+            action->write(doc_);
+            // QDomElement createElement = doc_.createElement("move");
+            // createElement.setAttribute("name", piece.objectName());
+            // createElement.setAttribute("x", piece.position().x());
+            // createElement.setAttribute("y", piece.position().y());
+            // createElement.setAttribute("destX", dest.x());
+            // createElement.setAttribute("destY", dest.y());
+            // createElement.setAttribute("color", piece.isBlack() ? "black" : "white");
+            // doc_.documentElement().appendChild(createElement);
+        }
+        saveDoc();
+    }
+
 };
 
 
@@ -135,16 +251,11 @@ Piece* Recorder::create(const QString& name, int x, int y, const QString& colorS
     {
         return NULL;
     }
-    if(nextUndo_ != actions_.size() - 1)
-    {
-        return NULL;
-    }
     ChessBoardModel::PieceColor col = colorFromString(colorString);
     Piece* result = model_->create(name, x, y, col);
     if(result)
     {
-        actions_.push_back(new CreateAction(name, x, y, col));
-        nextUndo_ = actions_.size() - 1;
+        queueAction(new CreateAction(name, x, y, col));
     }
     return result;
 }
@@ -153,6 +264,7 @@ bool Recorder::move(Piece* piece, int x, int y)
 {
     Piece* opposingPiece = model_->cell(x, y);
     bool takeMove = true;
+    bool takenHadMoved = true;
     QString takenPiece;
     ChessBoardModel::PieceColor takenColor;
     if(opposingPiece)
@@ -160,6 +272,7 @@ bool Recorder::move(Piece* piece, int x, int y)
         takeMove = true;
         takenPiece = opposingPiece->objectName();
         takenColor = opposingPiece->color();
+        takenHadMoved = opposingPiece->hasMoved();
     }
 
     int oldX = piece->position().x();
@@ -170,9 +283,8 @@ bool Recorder::move(Piece* piece, int x, int y)
         Q_ASSERT(!takeMove || takenColor != piece->color());
         MoveAction* moveAction = new MoveAction(piece, oldX, oldY, hadMoved);
         if(takeMove)
-            moveAction->setTakenPiece(takenPiece, takenColor);
-        actions_.push_back(moveAction);
-        nextUndo_ = actions_.size() - 1;
+            moveAction->setTakenPiece(takenPiece, takenColor, takenHadMoved);
+        queueAction(moveAction);
         return true;
     }
 
@@ -181,10 +293,20 @@ bool Recorder::move(Piece* piece, int x, int y)
 
 bool Recorder::undo()
 {
-    if(nextUndo_ >= 0)
+    bool couldUndo = canUndo();
+    bool couldRedo = canRedo();
+    if(canUndo())
     {
         actions_.at(nextUndo_)->undo(model_);
         --nextUndo_;
+        if(couldUndo != canUndo())
+        {
+            emit undoChanged(canUndo());
+        }
+        if(couldRedo != canRedo())
+        {
+            emit redoChanged(canRedo());
+        }
         return true;
     }
 
@@ -193,13 +315,33 @@ bool Recorder::undo()
 
 bool Recorder::redo()
 {
-    if(nextUndo_ + 1 < actions_.size())
+    bool couldUndo = canUndo();
+    bool couldRedo = canRedo();
+    if(canRedo())
     {
         actions_.at(nextUndo_ + 1)->redo(model_);
         ++nextUndo_;
+        if(couldUndo != canUndo())
+        {
+            emit undoChanged(canUndo());
+        }
+        if(couldRedo != canRedo())
+        {
+            emit redoChanged(canRedo());
+        }
         return true;
     }
     return false;
+}
+
+bool Recorder::canRedo() const
+{
+    return nextUndo_ + 1 < actions_.size();
+}
+
+bool Recorder::canUndo() const
+{
+    return nextUndo_ >= 0;
 }
 
 void Recorder::restart()
@@ -221,3 +363,29 @@ void Recorder::setModel(ChessBoardModel* model)
     emit modelChanged(model);
 }
 
+bool Recorder::save(const QString& filename)
+{
+    QString fileNameFromUrl = QUrl(filename).toLocalFile();
+    qDebug() << "Save: " << fileNameFromUrl;
+    Writer writer(fileNameFromUrl);
+    writer.write(actions_);
+    return true;
+}
+
+bool Recorder::load(const QString& filename)
+{
+    return true;
+}
+
+void Recorder::queueAction(Recorder::Action* action)
+{
+    while(nextUndo_ < actions_.size() - 1)
+    {
+        delete actions_.takeLast();
+    }
+    Q_ASSERT(nextUndo_ == actions_.size() - 1);
+    actions_.push_back(action);
+    nextUndo_ = actions_.size() - 1;
+    emit undoChanged(true);
+    emit redoChanged(false);
+}

@@ -4,11 +4,12 @@ Rectangle {
     property alias text: buttonLabel.text
     signal clicked
     id: root
-    color: "grey"
+    color: enabled ? "grey" : "lightGrey"
 
     Text {
         id: buttonLabel
         anchors.centerIn: parent
+        color: root.enabled ? "black" : "grey"
     }
 
     MouseArea {

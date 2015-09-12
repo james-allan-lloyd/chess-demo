@@ -78,6 +78,7 @@ Window {
                 Layout.fillHeight: true
                 visible: root.state == "playing" || root.state == "replaying"
                 onClicked: boardView.undo()
+                enabled: boardView.canUndo
             }
 
             Button {
@@ -87,6 +88,7 @@ Window {
                 Layout.fillHeight: true
                 visible: root.state == "playing" || root.state == "replaying"
                 onClicked: boardView.redo()
+                enabled: boardView.canRedo
             }
         }
     }
@@ -178,13 +180,13 @@ Window {
     function loadGame(filename)
     {
         state = "replaying"
-        boardModel.load(filename)
+        boardView.recorder.load(filename)
     }
 
 
     function saveGame(filename)
     {
-        boardModel.save(filename)
+        boardView.recorder.save(filename)
     }
 }
 

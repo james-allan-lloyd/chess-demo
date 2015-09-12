@@ -84,14 +84,6 @@ Rectangle {
         }
 
 
-        function test_actionsNotRecordedUnlessAtEndOfHistory()
-        {
-            recorder.create("pawn", 0, 0)
-            recorder.undo()
-            verify(!recorder.create("pawn", 0, 1), "Can't create unless at end of history")
-            verify(!board.cell(Qt.point(0, 1)), "Nothing was created")
-        }
-
         function test_multipleUndoRedo()
         {
             recorder.create("pawn", 0, 0)
@@ -115,6 +107,8 @@ Rectangle {
             verify(recorder.undo())
             verify(recorder.redo())
             recorder.restart()
+            verify(!recorder.canUndo, "Undo not available after restart")
+            verify(!recorder.canRedo, "Redo not available after restart")
             verify(!recorder.undo(), "Undo not available after restart")
             verify(!recorder.redo(), "Redo not available after restart")
             verify(board.cell(Qt.point(0,0)))
@@ -209,6 +203,37 @@ Rectangle {
             verify(whitePawn)
             verify(whitePawn.isValidMove(0, 5))
             verify(!whitePawn.isValidMove(0, 4))
+        }
+
+        function test_undoPawnTakeRetainsMovedStatus()
+        {
+            var whitePawn = board.create("pawn", 0, 6, Chess.BoardModel.WHITE);
+            var blackPawn = board.create("pawn", 1, 4, Chess.BoardModel.BLACK);
+            verify(recorder.move(blackPawn, 1, 5), "Black has moved from 1,5 to 1,6")
+            verify(recorder.move(whitePawn, 1, 5), "White takes black")
+            verify(recorder.undo())
+
+            whitePawn = board.cell(0,6)
+            blackPawn = board.cell(1,5)
+
+            compare(whitePawn.color, Chess.BoardModel.WHITE)
+            compare(blackPawn.color, Chess.BoardModel.BLACK)
+            verify(blackPawn.isValidMove(1, 6))
+            verify(!blackPawn.isValidMove(1, 7))
+        }
+
+        function test_movingClearsHistory()
+        {
+            var whitePawn = board.create("pawn", 0, 6, Chess.BoardModel.WHITE);
+            verify(recorder.move(whitePawn, 0, 5))
+            verify(recorder.move(whitePawn, 0, 4))
+            verify(recorder.undo())
+            // FIXME: don't delete pointers on remove
+            whitePawn = board.cell(0, 5)
+            verify(whitePawn)
+            verify(recorder.move(whitePawn, 0, 4))
+            verify(!recorder.canRedo)
+            verify(!recorder.redo())
         }
     }
 }
