@@ -11,7 +11,14 @@ Rectangle {
     property var cells: cells
     property var selectedPiece: null
     property string currentPlayer: "white"
+    property var recorder: recorder
+
     color: "red"  // Debugging size
+
+    Chess.Recorder {
+        id: recorder
+        model: boardview.model
+    }
 
     Grid {
         anchors.centerIn: parent
@@ -94,7 +101,7 @@ Rectangle {
                         }
                         else
                         {
-                            if(boardview.selectedPiece.moveTo(Qt.point(cellX, cellY)))
+                            if(recorder.move(boardview.selectedPiece, cellX, cellY))
                             {
                                 if(currentPlayer == "white")
                                 {
@@ -126,6 +133,21 @@ Rectangle {
     function resetTurns()
     {
         currentPlayer = "white"
+    }
+
+
+    function undo()
+    {
+        if(recorder.undo())
+        {
+            currentPlayer = currentPlayer == "black" ? "white" : "black"
+        }
+    }
+
+
+    function redo()
+    {
+
     }
 
 

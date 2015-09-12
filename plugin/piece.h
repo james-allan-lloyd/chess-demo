@@ -40,6 +40,10 @@ public:
     }
 
     Q_INVOKABLE virtual bool isValidMove(QPoint a) const = 0;
+    Q_INVOKABLE bool isValidMove(int x, int y) const
+    {
+        return isValidMove(QPoint(x, y));
+    }
 
     int index() const
     {
@@ -57,7 +61,14 @@ public:
         recalculateMoves();
     }
 
+    void markMoved(bool moved)
+    {
+        hasMoved_ = moved;
+        recalculateMoves();
+    }
+
     int hasMoved() const { return hasMoved_; }
+
     ChessBoardModel* board() { return board_; }
     const ChessBoardModel* board() const { return board_; }
 

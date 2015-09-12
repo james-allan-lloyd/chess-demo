@@ -48,21 +48,24 @@ class MoveAction : public Recorder::Action
     ChessBoardModel::PieceColor color_;
     ChessBoardModel::PieceColor takenColor_;
     QString takenName_;
+    bool hadMoved_;
 public:
-    MoveAction(Piece* piece, int oldX, int oldY)
+    MoveAction(Piece* piece, int oldX, int oldY, bool hadMoved)
         : name_(piece->objectName())
         , oldX_(oldX)
         , oldY_(oldY)
         , newX_(piece->position().x())
         , newY_(piece->position().y())
         , color_(piece->color())
+        , hadMoved_(hadMoved)
     {}
 
 
-    void setTakenPiece(const QString& name, ChessBoardModel::PieceColor col)
+    void setTakenPiece(const QString& name, ChessBoardModel::PieceColor col)  // , bool hasMoved)
     {
         takenName_ = name;
         takenColor_ = col;
+        // takenHasMoved_ = hasMoved;
     }
 
     bool undo(ChessBoardModel* model) override
@@ -70,7 +73,8 @@ public:
         // qDebug() << "Undo move " << name_ << x_ << y_;
         Piece* piece = model->cell(newX_, newY_);
         model->removePiece(piece); // because pawn moves are not reversable
-        piece = model->create(name_, oldX_, oldY_);
+        piece = model->create(name_, oldX_, oldY_, color_);
+        piece->markMoved(hadMoved_);
         Q_ASSERT(piece != NULL);
 
         if(!takenName_.isEmpty())
@@ -156,15 +160,17 @@ bool Recorder::move(Piece* piece, int x, int y)
         takeMove = true;
         takenPiece = opposingPiece->objectName();
         takenColor = opposingPiece->color();
-        Q_ASSERT(takenColor != piece->color());
     }
 
     int oldX = piece->position().x();
     int oldY = piece->position().y();
+    bool hadMoved = piece->hasMoved();
     if(piece->moveTo(QPoint(x, y)))
     {
-        MoveAction* moveAction = new MoveAction(piece, oldX, oldY);
-        moveAction->setTakenPiece(takenPiece, takenColor);
+        Q_ASSERT(!takeMove || takenColor != piece->color());
+        MoveAction* moveAction = new MoveAction(piece, oldX, oldY, hadMoved);
+        if(takeMove)
+            moveAction->setTakenPiece(takenPiece, takenColor);
         actions_.push_back(moveAction);
         nextUndo_ = actions_.size() - 1;
         return true;

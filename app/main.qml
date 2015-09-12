@@ -70,6 +70,24 @@ Window {
                 visible: root.state == "main" || root.state == "replaying"
                 onClicked: loadFileDialog.visible = true
             }
+
+            Button {
+                id: undoMoveButton
+                text: "Undo"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: root.state == "playing" || root.state == "replaying"
+                onClicked: boardView.undo()
+            }
+
+            Button {
+                id: redoMoveButton
+                text: "Redo"
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                visible: root.state == "playing" || root.state == "replaying"
+                onClicked: boardView.redo()
+            }
         }
     }
 
