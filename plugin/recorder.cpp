@@ -6,6 +6,9 @@
 #include <QXmlStreamReader>
 #include <QDomDocument>
 #include <QUrl>
+#include <QStandardPaths>
+#include <QDir>
+#include <QCoreApplication>
 
 namespace
 {
@@ -248,8 +251,13 @@ Recorder::Recorder(QObject* parent)
     : QObject(parent)
     , model_(NULL)
     , nextUndo_(-1)
+    // , lastDirectory_(QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation) + "/chess")
+    , lastDirectory_(qApp->applicationDirPath())
 {
-
+    // if(!QDir(lastDirectory_).exists())
+    // {
+    //     QDir().mkpath(lastDirectory_);
+    // }
 }
 
 Recorder::~Recorder()

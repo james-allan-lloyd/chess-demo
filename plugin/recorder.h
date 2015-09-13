@@ -2,6 +2,7 @@
 #define RECORDER_H
 
 #include <QObject>
+#include <QUrl>
 #include "chessboardmodel.h"
 
 class QDomDocument;
@@ -12,6 +13,7 @@ class Recorder : public QObject
     Q_PROPERTY(ChessBoardModel* model READ model WRITE setModel NOTIFY modelChanged)
     Q_PROPERTY(bool canRedo READ canRedo NOTIFY redoChanged)
     Q_PROPERTY(bool canUndo READ canUndo NOTIFY undoChanged)
+    Q_PROPERTY(QString lastDirectory READ lastDirectory NOTIFY lastDirectoryChanged)
 
     class Writer;
     class Reader;
@@ -42,11 +44,18 @@ public:
     Q_INVOKABLE bool save(const QString& filename);
     Q_INVOKABLE bool load(const QString& filename);
 
+    QString lastDirectory() const
+    {
+        return QUrl::fromLocalFile(lastDirectory_).toString();
+    }
+
 signals:
     void modelChanged(ChessBoardModel* model);
 
     void redoChanged(bool canRedo);
     void undoChanged(bool canUndo);
+
+    void lastDirectoryChanged(QString lastDirectory);
 
 public slots:
     void restart();
@@ -60,6 +69,7 @@ private:
     ChessBoardModel* model_;
     QList<Action*> actions_;
     int nextUndo_;
+    QString lastDirectory_;
 };
 
 #endif // RECORDER_H

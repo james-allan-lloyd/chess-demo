@@ -227,13 +227,17 @@ Window {
         id: loadFileDialog
         title: "Load game"
         onAccepted: loadGame(fileUrl)
+        folder: boardView.recorder.lastDirectory
+        nameFilters: [ "Chess saved games (*.chess)", "All files (*)" ]
     }
 
     FileDialog {
         id: saveFileDialog
         selectExisting: false
         title: "Save game"
-        onAccepted: saveGame(fileUrl)
+        onAccepted: saveGame(fileUrl.toLocalFile())
+        folder: boardView.recorder.lastDirectory
+        nameFilters: [ "Chess saved games (*.chess)", "All files (*)" ]
     }
 
     function setupBoard()
