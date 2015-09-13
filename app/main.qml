@@ -21,6 +21,7 @@ Window {
         id: boardView
         model: boardModel
         anchors.centerIn: parent
+        enabled: state == "playing"
     }
 
     Item
@@ -73,7 +74,7 @@ Window {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.state == "main" || root.state == "replaying"
-                onClicked: loadGame("file:///C:/Users/James/Documents/test.chess") // FileDialog.visible = true
+                onClicked: FileDialog.visible = true
             }
 
         }
