@@ -21,7 +21,7 @@ Window {
         id: boardView
         model: boardModel
         anchors.centerIn: parent
-        enabled: state == "playing"
+        enabled: root.state == "playing"
     }
 
     Item

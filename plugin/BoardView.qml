@@ -15,6 +15,7 @@ Rectangle {
     property alias canUndo: recorder.canUndo
     property alias canRedo: recorder.canRedo
 
+
     color: "red"  // Debugging size
 
     Chess.Recorder {
@@ -29,6 +30,7 @@ Rectangle {
         clip: true
         Repeater {
             id: cells
+            property int selectedIndex: -1;
             model: boardview.model ? boardview.model : boardview.rows * boardview.columns
             Rectangle {
                 property var validMoveDisplay: validMoveDisplay
@@ -82,7 +84,7 @@ Rectangle {
                     source: modelData ? modelData.image : ""
                     sourceSize.width: cellSize - 4;
                     sourceSize.height: cellSize - 4;
-                    visible: modelData
+                    visible: modelData && modelData != boardview.selectedPiece
                     anchors.centerIn: parent
                 }
 
@@ -98,30 +100,109 @@ Rectangle {
                                   || (modelData.isWhite && currentPlayer == "white"))
                                 {
                                     boardview.selectedPiece = modelData
+                                    animTester.x = parent.cellX * boardview.cellSize
+                                    animTester.y = parent.cellY * boardview.cellSize
                                 }
                             }
                         }
                         else
                         {
-                            if(recorder.move(boardview.selectedPiece, cellX, cellY))
+                            if(boardview.selectedPiece.isValidMove(Qt.point(cellX, cellY)))
                             {
-                                if(currentPlayer == "white")
-                                {
-                                    currentPlayer = "black"
-                                }
-                                else
-                                {
-                                    currentPlayer = "white"
-                                }
+                                pathAnim.startMove(parent.cellX, parent.cellY)
                             }
-
-                            boardview.selectedPiece = null
                         }
                     }
                 }
             }
         }
+
+        Item {
+            id: animTester
+            width : cellSize
+            height : cellSize
+            x: 0
+            y: 0
+            visible: boardview.selectedPiece
+            Image {
+                source: boardview.selectedPiece ? boardview.selectedPiece.image : ""
+                sourceSize.width: cellSize - 4;
+                sourceSize.height: cellSize - 4;
+                anchors.centerIn: parent
+            }
+        }
+
+        PathAnimation {
+            id: pathAnim
+
+            duration: 500
+            easing.type: Easing.InQuad
+
+            target: animTester
+            path: Path {
+                id: path
+                startX: 50
+                startY: 50
+
+                PathLine {
+                    id: pathEnd
+                    x: 0
+                    y: 0
+                }
+            }
+
+            onStopped: completeMove()
+
+            property int moveCellX: 0
+            property int moveCellY: 0
+
+            function startMove(cellX, cellY)
+            {
+                console.log("Move to " + String(cellX) + ", " + String(cellY))
+                moveCellX = cellX
+                moveCellY = cellY
+                path.startX = animTester.x
+                path.startY = animTester.y
+                pathEnd.x = cellX * boardview.cellSize
+                pathEnd.y = cellY * boardview.cellSize
+                pathAnim.start()
+            }
+
+            function completeMove()
+            {
+                recorder.move(boardview.selectedPiece, moveCellX, moveCellY)
+                if(currentPlayer == "white")
+                {
+                    currentPlayer = "black"
+                }
+                else
+                {
+                    currentPlayer = "white"
+                }
+
+                boardview.selectedPiece = null
+            }
+        }
+
+        // ParallelAnimation {
+        //     id: animTesterAnim
+        //     property int toX: 0
+        //     property int toY: 0
+        //     PropertyAnimation {
+        //         target: animTester
+        //         property: "x"
+        //         to: parent.toX
+        //         duration: 500
+        //     }
+        //     PropertyAnimation {
+        //         target: animTester
+        //         property: "y"
+        //         to: parent.toY
+        //         duration: 500
+        //     }
+        // }
     }
+
 
 
 
