@@ -19,5 +19,6 @@
         <file>images/games-chess-queen-white.png</file>
         <file>images/games-chess-rook-black.png</file>
         <file>images/games-chess-rook-white.png</file>
+        <file>SelectedPieceDisplay.qml</file>
     </qresource>
 </RCC>
