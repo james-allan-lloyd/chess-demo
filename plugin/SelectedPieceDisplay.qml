@@ -54,7 +54,6 @@ Item {
 
     function moveTo(cellX, cellY)
     {
-        console.log("Move to " + String(cellX) + ", " + String(cellY))
         root.moveCellX = cellX
         root.moveCellY = cellY
         path.startX = boardView.selectedPiece.position.x * boardView.cellSize
@@ -62,7 +61,6 @@ Item {
         pathEnd.x = cellX * boardView.cellSize
         pathEnd.y = cellY * boardView.cellSize
         pathAnim.start()
-        console.log("Moving to " + String(cellX) + ", " + String(cellY))
     }
 
 }

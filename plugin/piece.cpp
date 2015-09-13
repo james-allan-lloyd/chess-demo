@@ -45,6 +45,7 @@ void Piece::setPosition(const QPoint& p)
 {
     position_ = p;
     update();
+    positionChanged(p);
 }
 
 void Piece::markMoved(bool moved)

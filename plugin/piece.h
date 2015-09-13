@@ -14,7 +14,7 @@ class Piece : public QObject
     Q_OBJECT
     Q_PROPERTY(bool isBlack READ isBlack CONSTANT)
     Q_PROPERTY(bool isWhite READ isWhite CONSTANT)
-    Q_PROPERTY(QPoint position READ position)
+    Q_PROPERTY(QPoint position READ position NOTIFY positionChanged)
     Q_PROPERTY(ChessBoardModel::PieceColor color READ color WRITE setColor NOTIFY colorChanged)
     Q_PROPERTY(QString image READ image CONSTANT)
 
@@ -24,6 +24,8 @@ class Piece : public QObject
     ChessBoardModel::PieceColor color_;
     QPoint position_;
     QSet<QPoint> validMoves_;
+
+    QPoint m_position;
 
 public:
     Piece(QString name, ChessBoardModel* board);
@@ -64,6 +66,7 @@ protected:
 signals:
     // not really needed, but qml complains
     void colorChanged(ChessBoardModel::PieceColor color);
+    void positionChanged(QPoint position);
 };
 
 #endif // PIECE_H
