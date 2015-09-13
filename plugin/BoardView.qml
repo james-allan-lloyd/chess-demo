@@ -111,6 +111,10 @@ Rectangle {
             {
                 selectedPieceDisplay.moveTo(cellX, cellY)
             }
+            else
+            {
+                boardview.selectedPiece = null
+            }
         }
     }
 

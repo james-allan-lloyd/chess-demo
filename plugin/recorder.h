@@ -44,10 +44,7 @@ public:
     Q_INVOKABLE bool save(const QString& filename);
     Q_INVOKABLE bool load(const QString& filename);
 
-    QString lastDirectory() const
-    {
-        return QUrl::fromLocalFile(lastDirectory_).toString();
-    }
+    QString lastDirectory() const;
 
 signals:
     void modelChanged(ChessBoardModel* model);

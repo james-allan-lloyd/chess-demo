@@ -178,3 +178,20 @@ bool ChessBoardModel::isValidPosition(const QPoint& p) const
 {
     return p.x() >= 0 && p.y() >= 0 && p.x() < 8 && p.y() < 8;
 }
+
+ChessBoardModel::PieceColor colorFromString(const QString& colorString)
+{
+    QString lowerColorString = colorString.toLower();
+
+    if(lowerColorString == "white")
+    {
+        return ChessBoardModel::WHITE;
+    }
+    else if(lowerColorString == "black")
+    {
+        return ChessBoardModel::BLACK;
+    }
+
+    qWarning() << "Unknown color" << colorString << " defaulting to black";
+    return ChessBoardModel::BLACK;
+}

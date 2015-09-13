@@ -65,4 +65,8 @@ signals:
     void pieceTaken(QString name, QString color);
 };
 
+
+
+ChessBoardModel::PieceColor colorFromString(const QString& colorString);
+
 #endif // CHESSBOARDMODEL_H

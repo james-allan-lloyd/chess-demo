@@ -17,7 +17,11 @@ SOURCES += \
     bishop.cpp \
     knight.cpp \
     king.cpp \
-    recorder.cpp
+    recorder.cpp \
+    recorderwriter.cpp \
+    recorderreader.cpp \
+    createaction.cpp \
+    moveaction.cpp
 
 HEADERS += \
     plugin_plugin.h \
@@ -29,7 +33,11 @@ HEADERS += \
     bishop.h \
     knight.h \
     king.h \
-    recorder.h
+    recorder.h \
+    recorderwriter.h \
+    recorderreader.h \
+    createaction.h \
+    moveaction.h
 
 DISTFILES = qmldir \
     THANKS \
