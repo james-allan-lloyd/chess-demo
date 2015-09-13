@@ -53,10 +53,10 @@ Piece* Recorder::create(const QString& name, int x, int y, const QString& colorS
 bool Recorder::move(Piece* piece, int x, int y)
 {
     Piece* opposingPiece = model_->cell(x, y);
-    bool takeMove = true;
+    bool takeMove = false;
     bool takenHadMoved = true;
     QString takenPiece;
-    ChessBoardModel::PieceColor takenColor;
+    ChessBoardModel::PieceColor takenColor = ChessBoardModel::BLACK;
     if(opposingPiece)
     {
         takeMove = true;

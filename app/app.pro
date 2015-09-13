@@ -13,3 +13,6 @@ QML_IMPORT_PATH = ../imports
 # Default rules for deployment.
 include(deployment.pri)
 
+DISTFILES += \
+    ../README.txt
+
