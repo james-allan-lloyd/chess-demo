@@ -11,6 +11,7 @@ Window {
     width: 500
     height: 500
     property string state: "main"
+    property string error: ""
 
     Chess.BoardModel {
         id: boardModel
@@ -39,6 +40,7 @@ Window {
                 id: startGameButton
                 onClicked: startGame()
                 text: "Start game"
+                Layout.minimumWidth: 20
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.state == "main" || root.state == "replaying"
@@ -47,6 +49,7 @@ Window {
             Button {
                 id: saveGameButton
                 text: "Save game"
+                Layout.minimumWidth: 20
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.state == "playing"
@@ -56,6 +59,7 @@ Window {
             Button {
                 id: stopGameButton
                 text: "Stop game"
+                Layout.minimumWidth: 20
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.state == "playing"
@@ -65,31 +69,13 @@ Window {
             Button {
                 id: loadGameButton
                 text: "Load game"
+                Layout.minimumWidth: 20
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.state == "main" || root.state == "replaying"
                 onClicked: loadFileDialog.visible = true
             }
 
-            Button {
-                id: undoMoveButton
-                text: "Undo"
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                visible: root.state == "playing" || root.state == "replaying"
-                onClicked: boardView.undo()
-                enabled: boardView.canUndo
-            }
-
-            Button {
-                id: redoMoveButton
-                text: "Redo"
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                visible: root.state == "playing" || root.state == "replaying"
-                onClicked: boardView.redo()
-                enabled: boardView.canRedo
-            }
         }
     }
 
@@ -105,11 +91,13 @@ Window {
         height: 30
 
         RowLayout {
+            id: statusAreaLayout
             spacing: 6
             anchors.fill: parent
 
             Rectangle
             {
+                Layout.minimumWidth: 20
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 color: "lightGrey"
@@ -136,8 +124,86 @@ Window {
                     anchors.margins: 5
                 }
             }
+
+            Button {
+                id: undoMoveButton
+                text: "Undo"
+                Layout.minimumWidth : currentPlayer.contentWidth + 20
+                Layout.minimumHeight : currentPlayer.contentHeight
+                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                onClicked: boardView.undo()
+                enabled: boardView.canUndo
+            }
+
+            Button {
+                id: redoMoveButton
+                text: "Redo"
+                Layout.minimumWidth : currentPlayer.contentWidth + 20
+                Layout.minimumHeight : currentPlayer.contentHeight
+                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+                onClicked: boardView.redo()
+                enabled: boardView.canRedo
+            }
         }
     }
+
+
+    Item
+    {
+        visible: root.state == "replaying"
+        id: replayBar
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 5
+        height: 30
+
+        RowLayout {
+            spacing: 6
+            anchors.fill: parent
+
+            Button {
+                id: prevMoveButton
+                text: "Previous"
+                Layout.minimumWidth : currentPlayer.contentWidth + 20
+                Layout.minimumHeight : currentPlayer.contentHeight
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                onClicked: boardView.undo()
+                enabled: boardView.canUndo
+            }
+
+            Button {
+                id: nextMoveButton
+                text: "Next"
+                Layout.minimumWidth : currentPlayer.contentWidth + 20
+                Layout.minimumHeight : currentPlayer.contentHeight
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                onClicked: boardView.redo()
+                enabled: boardView.canRedo
+            }
+        }
+    }
+
+
+    Rectangle
+    {
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 5
+        height: 30
+        id: errorDisplay
+        color: "red"
+        visible: error.length > 0
+        Text {
+            text: error
+        }
+    }
+
 
     FileDialog {
         id: loadFileDialog
@@ -168,6 +234,8 @@ Window {
     {
         state = "playing"
         boardView.resetToDefault()
+        boardView.recorder.restart()
+        statusAreaLayout.update()
     }
 
 
@@ -179,8 +247,15 @@ Window {
 
     function loadGame(filename)
     {
-        state = "replaying"
-        boardView.recorder.load(filename)
+        if(boardView.recorder.load(filename))
+        {
+            state = "replaying"
+            boardView.resetToDefault()
+        }
+        else
+        {
+            error = "Failed to load from " + filename
+        }
     }
 
 

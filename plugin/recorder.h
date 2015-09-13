@@ -14,6 +14,7 @@ class Recorder : public QObject
     Q_PROPERTY(bool canUndo READ canUndo NOTIFY undoChanged)
 
     class Writer;
+    class Reader;
 public:
     class Action
     {

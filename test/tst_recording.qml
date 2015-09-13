@@ -39,16 +39,63 @@ Rectangle {
         // }
 
 
-        // function test_recordMoves()
-        // {
-        //     var pawn = board.create("pawn", 0, 0)
-        //     verify(pawn.moveTo(Qt.point(0, 1)))
-        //     board.save("test.chess")
-        //     board.clearPieces()
-        //     board.load("test.chess")
-        //     verify(board.cell(Qt.point(0,0)) === null, "Pawn is not in created position")
-        //     verify(board.cell(Qt.point(0,1)) !== null, "Pawn is in moved position")
-        // }
+        function test_recordMoves()
+        {
+            var pawn = board.create("pawn", 0, 0)
+            verify(recorder.move(pawn, 0, 1))
+            recorder.save("file:test.chess")
+            board.clearPieces()
+            verify(recorder.load("file:test.chess"))
+            var pawn = board.create("pawn", 0, 0)
+            verify(recorder.canRedo, "Redo the pawn move is available")
+            verify(recorder.redo(), "Move is redone")
+            verify(!board.cell(0,0), "Pawn is not in created position")
+            verify(board.cell(0,1), "Pawn is in moved position")
+        }
+
+
+        function test_recordTake()
+        {
+            var blackPawn = board.create("pawn", 0, 0, Chess.BoardModel.BLACK);
+            var whitePawn = board.create("pawn", 1, 1, Chess.BoardModel.WHITE);
+
+            verify(recorder.move(blackPawn, 1, 1), "Black pawn takes white pawn")
+            recorder.save("file:test.chess")
+
+            // reset the board
+            board.clearPieces()
+            var blackPawn = board.create("pawn", 0, 0, Chess.BoardModel.BLACK);
+            var whitePawn = board.create("pawn", 1, 1, Chess.BoardModel.WHITE);
+
+            verify(recorder.load("file:test.chess"))
+            verify(recorder.redo(), "Move is redone")
+            verify(!board.cell(0,0), "Black pawn has moved")
+            compare(board.cell(1,1).color, Chess.BoardModel.BLACK, "White pawn is taken by black pawn after load")
+
+            // Make sure the history entries have enough information to
+            // actually undo moves, not just redo them
+            verify(recorder.undo(), "Move is undone")
+            verify(board.cell(1,1), "Taken piece is restored")
+            compare(board.cell(0,0).color, Chess.BoardModel.BLACK, "Attacking piece is in original position")
+            compare(board.cell(1,1).color, Chess.BoardModel.WHITE, "Taken piece is restored")
+        }
+
+
+        function test_recordPawnHasMoved()
+        {
+            var blackPawn = board.create("pawn", 0, 0, Chess.BoardModel.BLACK);
+            verify(recorder.move(blackPawn, 0, 2))
+            recorder.save("file:test.chess")
+
+            board.clearPieces()
+            board.create("pawn", 0, 0, Chess.BoardModel.BLACK);
+            recorder.load("file:test.chess")
+            verify(recorder.redo())  // first redo will work:w
+            verify(recorder.undo())
+            blackPawn = board.cell(0, 0)
+            verify(blackPawn.isValidMove(Qt.point(0,2)), "Pawn should still be able to double move")
+            verify(recorder.redo())
+        }
 
 
         function test_createWithoutModel()

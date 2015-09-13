@@ -7,6 +7,28 @@
 #include <QDomDocument>
 #include <QUrl>
 
+namespace
+{
+
+    ChessBoardModel::PieceColor colorFromString(const QString& colorString)
+    {
+        QString lowerColorString = colorString.toLower();
+
+        if(lowerColorString == "white")
+        {
+            return ChessBoardModel::WHITE;
+        }
+        else if(lowerColorString == "black")
+        {
+            return ChessBoardModel::BLACK;
+        }
+
+        qWarning() << "Unknown color" << colorString << " defaulting to black";
+        return ChessBoardModel::BLACK;
+    }
+
+}
+
 class CreateAction : public Recorder::Action
 {
     QString name_;
@@ -41,7 +63,7 @@ public:
         return piece != NULL;
     }
 
-    void write(QDomDocument& doc) override
+    void write(QDomDocument& ) override
     {
 
     }
@@ -50,16 +72,16 @@ public:
 
 class MoveAction : public Recorder::Action
 {
-    QString name_;
-    int oldX_;
-    int oldY_;
-    int newX_;
-    int newY_;
-    ChessBoardModel::PieceColor color_;
+    const QString name_;
+    const int oldX_;
+    const int oldY_;
+    const int newX_;
+    const int newY_;
+    const ChessBoardModel::PieceColor color_;
     ChessBoardModel::PieceColor takenColor_;
     QString takenName_;
     bool takenHasMoved_;
-    bool hadMoved_;
+    const bool hadMoved_;
 
 public:
     MoveAction(Piece* piece, int oldX, int oldY, bool hadMoved)
@@ -73,6 +95,23 @@ public:
     {}
 
 
+    MoveAction(const QString& name,
+               int oldX,
+               int oldY,
+               int newX,
+               int newY,
+               ChessBoardModel::PieceColor color,
+               bool hadMoved)
+        : name_(name)
+        , oldX_(oldX)
+        , oldY_(oldY)
+        , newX_(newX)
+        , newY_(newY)
+        , color_(color)
+        , hadMoved_(hadMoved)
+    {}
+
+
     void setTakenPiece(const QString& name, ChessBoardModel::PieceColor col, bool hasMoved)
     {
         takenName_ = name;
@@ -82,8 +121,9 @@ public:
 
     bool undo(ChessBoardModel* model) override
     {
-        // qDebug() << "Undo move " << name_ << x_ << y_;
+        // qDebug() << "Undo move " << name_ << newX_ << newY_;
         Piece* piece = model->cell(newX_, newY_);
+        Q_ASSERT(piece != NULL);
         model->removePiece(piece); // because pawn moves are not reversable
         piece = model->create(name_, oldX_, oldY_, color_);
         piece->markMoved(hadMoved_);
@@ -99,9 +139,11 @@ public:
 
     bool redo(ChessBoardModel* model) override
     {
-        // qDebug() << "Redo creation" << name_ << x_ << y_;
+        // qDebug() << "Redo move " << name_ << newX_ << newY_;
         Piece* piece = model->cell(oldX_, oldY_);
-        piece->moveTo(QPoint(newX_, newY_));
+        Q_ASSERT(piece);
+        bool moved = piece->moveTo(QPoint(newX_, newY_));
+        Q_ASSERT(moved);
         return true;
     }
 
@@ -114,15 +156,14 @@ public:
         moveElement.setAttribute("destX", newX_);
         moveElement.setAttribute("destY", newY_);
         moveElement.setAttribute("color", color_ == ChessBoardModel::BLACK ? "black" : "white");
+        moveElement.setAttribute("hadMoved", hadMoved_ ? "1" : "0");
 
         if(!takenName_.isEmpty())
         {
             QDomElement takeElement = doc.createElement("takes");
-            takeElement.setAttribute("name", name_);
-            takeElement.setAttribute("x", oldX_);
-            takeElement.setAttribute("y", oldY_);
-            takeElement.setAttribute("destX", newX_);
-            takeElement.setAttribute("destY", newY_);
+            takeElement.setAttribute("name", takenName_);
+            takeElement.setAttribute("hadMoved", takenHasMoved_ ? "1" : "0");
+            takeElement.setAttribute("color", takenColor_ == ChessBoardModel::BLACK ? "black" : "white");
             moveElement.appendChild(takeElement);
         }
         doc.documentElement().appendChild(moveElement);
@@ -182,10 +223,11 @@ public:
         QFile file(filename_);
         if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
         {
+            qWarning() << "Not able to save doc";
             return;
         }
         QTextStream textStream(&file);
-        doc_.save(textStream, 0);
+        doc_.save(textStream, 4);
     }
 
 
@@ -195,14 +237,6 @@ public:
         foreach(Action* action, actions)
         {
             action->write(doc_);
-            // QDomElement createElement = doc_.createElement("move");
-            // createElement.setAttribute("name", piece.objectName());
-            // createElement.setAttribute("x", piece.position().x());
-            // createElement.setAttribute("y", piece.position().y());
-            // createElement.setAttribute("destX", dest.x());
-            // createElement.setAttribute("destY", dest.y());
-            // createElement.setAttribute("color", piece.isBlack() ? "black" : "white");
-            // doc_.documentElement().appendChild(createElement);
         }
         saveDoc();
     }
@@ -226,23 +260,6 @@ Recorder::~Recorder()
 ChessBoardModel* Recorder::model() const
 {
     return model_;
-}
-
-ChessBoardModel::PieceColor colorFromString(const QString& colorString)
-{
-    QString lowerColorString = colorString.toLower();
-
-    if(lowerColorString == "white")
-    {
-        return ChessBoardModel::WHITE;
-    }
-    else if(lowerColorString == "black")
-    {
-        return ChessBoardModel::BLACK;
-    }
-
-    qWarning() << "Unknown color" << colorString << " defaulting to black";
-    return ChessBoardModel::BLACK;
 }
 
 Piece* Recorder::create(const QString& name, int x, int y, const QString& colorString)
@@ -366,19 +383,128 @@ void Recorder::setModel(ChessBoardModel* model)
 bool Recorder::save(const QString& filename)
 {
     QString fileNameFromUrl = QUrl(filename).toLocalFile();
-    qDebug() << "Save: " << fileNameFromUrl;
+    qDebug() << "Save: " << fileNameFromUrl << ", originally:" << filename;
     Writer writer(fileNameFromUrl);
     writer.write(actions_);
     return true;
 }
 
+
+class Recorder::Reader
+{
+    QList<Recorder::Action*>& historyList_;
+public:
+    Reader(QList<Recorder::Action*>& historyList)
+        : historyList_(historyList)
+    {
+    }
+
+    bool read(QFile& input)
+    {
+        Q_ASSERT(input.isOpen());
+        historyList_.clear();
+
+        QXmlStreamReader xml(&input);
+        if(xml.readNextStartElement())
+        {
+            if(xml.name() == "chess")
+            {
+                return readEvents(xml);
+            }
+            else
+            {
+                qWarning() << "Invalid start element" << xml.name();
+                return false;
+            }
+        }
+
+        qWarning() << "No XML elements";
+        return false;
+    }
+
+
+    bool readEvents(QXmlStreamReader& xml)
+    {
+        while(xml.readNextStartElement())
+        {
+            if(xml.name() == "create")
+            {
+                readCreate(xml);
+            }
+            else if(xml.name() == "move")
+            {
+                readMove(xml);
+            }
+            else
+            {
+                xml.skipCurrentElement();
+            }
+        }
+        return true;
+    }
+
+    bool readCreate(QXmlStreamReader& xml)
+    {
+        int x = xml.attributes().value("x").toInt();
+        int y = xml.attributes().value("y").toInt();
+        QString name = xml.attributes().value("name").toString();
+        QString color = xml.attributes().value("color").toString().toLower();
+        ChessBoardModel::PieceColor col = colorFromString(color);
+        historyList_.append(new CreateAction(name, x, y, col));
+        xml.skipCurrentElement();
+        return true;
+    }
+
+    bool readMove(QXmlStreamReader& xml)
+    {
+        int x = xml.attributes().value("x").toInt();
+        int y = xml.attributes().value("y").toInt();
+        int destX = xml.attributes().value("destX").toInt();
+        int destY = xml.attributes().value("destY").toInt();
+        QString name = xml.attributes().value("name").toString();
+        QString color = xml.attributes().value("color").toString();
+        bool hadMoved = xml.attributes().value("hasMoved").toInt() == 1;
+        ChessBoardModel::PieceColor col = colorFromString(color);
+
+        MoveAction* moveAction = new MoveAction(name, x, y, destX, destY, col, hadMoved);
+        if(xml.readNextStartElement())
+        {
+            if(xml.name() == "takes")
+            {
+                QString takenName = xml.attributes().value("name").toString();
+                QString color = xml.attributes().value("color").toString();
+                bool takenHasMoved = xml.attributes().value("hasMoved").toInt() == 1;
+                ChessBoardModel::PieceColor takenCol = colorFromString(color);
+                moveAction->setTakenPiece(takenName, takenCol, takenHasMoved);
+            }
+            xml.skipCurrentElement();
+        }
+        historyList_.append(moveAction);
+        xml.skipCurrentElement();
+        return true;
+    }
+};
+
 bool Recorder::load(const QString& filename)
 {
+    QString fileNameFromUrl = QUrl(filename).toLocalFile();
+    QFile f(fileNameFromUrl);
+    if(!f.open(QIODevice::ReadOnly))
+    {
+        qWarning() << "Unable to load from: " << fileNameFromUrl;
+        return false;
+    }
+    Reader reader(actions_);
+    reader.read(f);
+    nextUndo_ = -1;
+    emit undoChanged(false);
+    emit redoChanged(actions_.size() > 0);
     return true;
 }
 
 void Recorder::queueAction(Recorder::Action* action)
 {
+    // clear to end of the queue for the new action
     while(nextUndo_ < actions_.size() - 1)
     {
         delete actions_.takeLast();
