@@ -96,6 +96,7 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
     if(targetPiece)
     {
         Q_ASSERT(targetPiece->color() != piece->color());
+        emit pieceTaken(targetPiece->objectName(), targetPiece->isBlack() ? "black" : "white");
         removePiece(targetPiece);
         targetPiece = NULL; // deleted
     }

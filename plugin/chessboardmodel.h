@@ -73,6 +73,7 @@ private:
 
 signals:
     void pieceCountChanged(int newPieceCount);
+    void pieceTaken(QString name, QString color);
 };
 
 #endif // CHESSBOARDMODEL_H

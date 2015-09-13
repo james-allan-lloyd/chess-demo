@@ -17,6 +17,13 @@ TestCase {
         signalName: "dataChanged"
     }
 
+    SignalSpy
+    {
+        id: pieceTakenSpy
+        target: board
+        signalName: "pieceTaken"
+    }
+
     function init()
     {
     }
@@ -134,5 +141,16 @@ TestCase {
         var blackPawn2 = board.create("pawn", 1, 1, Chess.BoardModel.BLACK)
 
         verify(!blackPawn1.isValidMove(Qt.point(1, 1)), "Black pawn will not attack other black pawn")
+    }
+
+
+    function test_signalIsEmittedWhenPieceIsTaken()
+    {
+        var blackPawn = board.create("pawn", 0,0, Chess.BoardModel.BLACK)
+        var whitePawn = board.create("pawn", 1,1, Chess.BoardModel.WHITE)
+
+        var initial = pieceTakenSpy.count;
+        verify(blackPawn.moveTo(Qt.point(1,1)), "Piece is taken")
+        compare(pieceTakenSpy.count, initial + 1, "Piece taken signal is emitted")
     }
 }

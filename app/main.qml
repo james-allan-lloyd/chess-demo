@@ -21,7 +21,7 @@ Window {
         id: boardView
         model: boardModel
         anchors.centerIn: parent
-        enabled: root.state == "playing"
+        enabled: root.state == "playing" && !winner.length
     }
 
     Item
@@ -74,7 +74,7 @@ Window {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.state == "main" || root.state == "replaying"
-                onClicked: FileDialog.visible = true
+                onClicked: loadFileDialog.visible = true
             }
 
         }
@@ -83,7 +83,7 @@ Window {
 
     Item
     {
-        visible: root.state == "playing"
+        visible: root.state == "playing" && boardView.winner.length === 0
         id: statusArea
         anchors.bottom: parent.bottom
         anchors.left: parent.left
@@ -206,6 +206,23 @@ Window {
     }
 
 
+    Rectangle {
+        id: gameOverDisplay
+        color: "darkRed"
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
+        height: 30
+        visible: boardView.winner.length > 0 && root.state == "playing"
+
+        Text {
+            anchors.centerIn: parent
+            text: "Game Over, " + boardView.winner + " wins"
+            color: "white"
+        }
+    }
+
+
     FileDialog {
         id: loadFileDialog
         title: "Load game"
@@ -221,7 +238,7 @@ Window {
 
     function setupBoard()
     {
-        boardView.resetToDefault()
+        // boardView.resetToDefault()
         // boardModel.clearPieces()
         // boardModel.create("pawn", 4, 0, Chess.BoardModel.BLACK)
         // boardModel.create("pawn", 4, 7, Chess.BoardModel.WHITE)
@@ -229,14 +246,18 @@ Window {
         // boardModel.create("pawn", 1, 1, Chess.BoardModel.BLACK)
         // boardModel.create("Queen", 6, 4, Chess.BoardModel.WHITE)
         // boardModel.create("Knight", 3, 4, Chess.BoardModel.WHITE)
+        boardView.resetTurns()
+        boardModel.create("pawn", 3, 3, Chess.BoardModel.BLACK)
+        boardModel.create("king", 4, 4, Chess.BoardModel.BLACK)
+        boardModel.create("queen", 5, 5, Chess.BoardModel.WHITE)
     }
 
     function startGame()
     {
         state = "playing"
         boardView.resetToDefault()
+        // setupBoard()
         boardView.recorder.restart()
-        statusAreaLayout.update()
     }
 
 

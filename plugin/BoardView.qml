@@ -14,9 +14,19 @@ Rectangle {
     property var recorder: recorder
     property alias canUndo: recorder.canUndo
     property alias canRedo: recorder.canRedo
-
+    property string winner: ""
 
     color: "red"  // Debugging size
+
+    function pieceTaken(name, color)
+    {
+        if(name === "King")
+        {
+            winner = currentPlayer
+        }
+    }
+
+    Component.onCompleted: model.onPieceTaken.connect(pieceTaken)
 
     Chess.Recorder {
         id: recorder
@@ -158,7 +168,7 @@ Rectangle {
 
             function startMove(cellX, cellY)
             {
-                console.log("Move to " + String(cellX) + ", " + String(cellY))
+                // console.log("Move to " + String(cellX) + ", " + String(cellY))
                 moveCellX = cellX
                 moveCellY = cellY
                 path.startX = animTester.x
@@ -183,24 +193,6 @@ Rectangle {
                 boardview.selectedPiece = null
             }
         }
-
-        // ParallelAnimation {
-        //     id: animTesterAnim
-        //     property int toX: 0
-        //     property int toY: 0
-        //     PropertyAnimation {
-        //         target: animTester
-        //         property: "x"
-        //         to: parent.toX
-        //         duration: 500
-        //     }
-        //     PropertyAnimation {
-        //         target: animTester
-        //         property: "y"
-        //         to: parent.toY
-        //         duration: 500
-        //     }
-        // }
     }
 
 
@@ -216,6 +208,7 @@ Rectangle {
     function resetTurns()
     {
         currentPlayer = "white"
+        winner = ""
     }
 
 
@@ -240,6 +233,7 @@ Rectangle {
     function resetToDefault()
     {
         resetTurns()
+        winner = ""
         model.clearPieces()
         model.create("Rook",   0, 0, Chess.BoardModel.BLACK)
         model.create("Knight", 1, 0, Chess.BoardModel.BLACK)
