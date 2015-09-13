@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QPoint>
-#include <QQmlListProperty>
 
 #include "chessboardmodel.h"
 
@@ -24,97 +23,43 @@ class Piece : public QObject
 
     ChessBoardModel::PieceColor color_;
     QPoint position_;
+    QSet<QPoint> validMoves_;
 
 public:
-    Piece(QString name, ChessBoardModel* board)
-        : QObject(board)
-        , board_(board)
-        , hasMoved_(false)
-        , color_(ChessBoardModel::BLACK)
-    {
-        setObjectName(name);
-    }
+    Piece(QString name, ChessBoardModel* board);
 
-    virtual ~Piece()
-    {
-    }
+    virtual ~Piece();
 
-    Q_INVOKABLE virtual bool isValidMove(QPoint a) const = 0;
-    Q_INVOKABLE bool isValidMove(int x, int y) const
-    {
-        return isValidMove(QPoint(x, y));
-    }
+    int index() const;
+    QString image() const;
 
-    int index() const
-    {
-        return position_.x() + position_.y() * 8;
-    }
+    Q_INVOKABLE bool isValidMove(const QPoint& a) const;
+    Q_INVOKABLE bool isValidMove(int x, int y) const;
 
-    QPoint position() const
-    {
-        return position_;
-    }
+    QPoint position() const;
+    void setPosition(const QPoint& p);
 
-    void setPosition(const QPoint& p)
-    {
-        position_ = p;
-        recalculateMoves();
-    }
+    void markMoved(bool moved);
+    int hasMoved() const;
 
-    void markMoved(bool moved)
-    {
-        hasMoved_ = moved;
-        recalculateMoves();
-    }
+    ChessBoardModel* board();
+    const ChessBoardModel* board() const;
 
-    int hasMoved() const { return hasMoved_; }
-
-    ChessBoardModel* board() { return board_; }
-    const ChessBoardModel* board() const { return board_; }
-
-    ChessBoardModel::PieceColor color() const
-    {
-        return color_;
-    }
-
-    bool isBlack() const
-    {
-        return color_ == ChessBoardModel::BLACK;
-    }
-
-    bool isWhite() const
-    {
-        return color_ == ChessBoardModel::WHITE;
-    }
+    ChessBoardModel::PieceColor color() const;
+    bool isBlack() const;
+    bool isWhite() const;
 
 public slots:
-    bool moveTo(QPoint p)
-    {
-        bool result = board_->movePiece(this, p);
-        if(result)
-        {
-            hasMoved_ = true;
-            recalculateMoves();  // need to recalc based on the fact we've now moved.
-        }
-        return result;
-    }
+    bool moveTo(QPoint p);
 
-    void setColor(ChessBoardModel::PieceColor color)
-    {
-        if(color_ != color)
-        {
-            color_ = color;
-            emit colorChanged(color_);
-        }
-    }
+    void setColor(ChessBoardModel::PieceColor color);
 
-public:
-    virtual void recalculateMoves() = 0;
+    void update();
 
-    QString image() const;
 
 protected:
     void projectMovement(int xStep, int yStep, QSet<QPoint>& validMoves);
+    virtual QSet<QPoint> recalculateMoves() = 0;
 
 signals:
     // not really needed, but qml complains

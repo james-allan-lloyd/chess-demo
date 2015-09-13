@@ -6,19 +6,12 @@
 
 class Knight : public Piece
 {
-    QSet<QPoint> validMoves_;
     QList<QPoint> knightVectors_;
 public:
     Knight(ChessBoardModel* parent);
 
-signals:
-
-public slots:
-
-    // Piece interface
-public:
-    bool isValidMove(QPoint a) const override;
-    void recalculateMoves() override;
+protected:
+    QSet<QPoint> recalculateMoves() override;
 };
 
 #endif // KNIGHT_H

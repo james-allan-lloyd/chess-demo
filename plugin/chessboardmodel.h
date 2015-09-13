@@ -3,12 +3,10 @@
 
 #include <QAbstractListModel>
 #include <QPoint>
-#include <QQmlListProperty>
-#include <QDebug>
+#include <QSet>
 #include <functional>
 
 class Piece;
-class QXmlStreamReader;
 
 class ChessBoardModel : public QAbstractListModel
 {
@@ -46,10 +44,7 @@ public:
     Q_INVOKABLE Piece* cell(QPoint p);
     const Piece* cell(QPoint p) const;
 
-    Q_INVOKABLE Piece* cell(int x, int y)
-    {
-        return cell(QPoint(x, y));
-    }
+    Q_INVOKABLE Piece* cell(int x, int y);
 
     Q_INVOKABLE void removePiece(Piece* piece);
 
@@ -64,12 +59,6 @@ public:
     Q_INVOKABLE void clearPieces();
 
     bool isValidPosition(const QPoint& p) const;
-
-private:
-    bool readEvents(QXmlStreamReader& xml);
-    bool readCreate(QXmlStreamReader& xml);
-    bool readMove(QXmlStreamReader& xml);
-
 
 signals:
     void pieceCountChanged(int newPieceCount);

@@ -9,6 +9,8 @@
 #include <QStandardPaths>
 #include <QDir>
 #include <QCoreApplication>
+#include <QDebug>
+
 
 namespace
 {

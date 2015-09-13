@@ -7,16 +7,9 @@ Pawn::Pawn(ChessBoardModel* parent)
 }
 
 
-bool Pawn::isValidMove(QPoint a) const
+QSet<QPoint> Pawn::recalculateMoves()
 {
-    return validMoves_.contains(a);
-}
-
-
-
-void Pawn::recalculateMoves()
-{
-    validMoves_.clear();
+    QSet<QPoint> result;
 
     int direction = 1;
     if(color() == ChessBoardModel::WHITE)
@@ -27,13 +20,13 @@ void Pawn::recalculateMoves()
     QPoint oneMove = position() + QPoint(0, direction);
     if(board()->isValidPosition(oneMove) && !board()->cell(oneMove))
     {
-        validMoves_.insert(oneMove);
+        result.insert(oneMove);
         if(!hasMoved())
         {
             QPoint twoMove = position() + QPoint(0, 2*direction);
             if(board()->isValidPosition(twoMove) && !board()->cell(twoMove))
             {
-                validMoves_.insert(twoMove);
+                result.insert(twoMove);
             }
         }
     }
@@ -42,13 +35,15 @@ void Pawn::recalculateMoves()
     Piece* leftAttackPiece = board()->cell(leftAttack);
     if(leftAttackPiece && leftAttackPiece->color() != color())
     {
-        validMoves_.insert(leftAttack);
+        result.insert(leftAttack);
     }
 
     QPoint rightAttack = position() + QPoint(-1,direction*1);
     Piece* rightAttackPiece = board()->cell(rightAttack);
     if(rightAttackPiece && rightAttackPiece->color() != color())
     {
-        validMoves_.insert(rightAttack);
+        result.insert(rightAttack);
     }
+
+    return result;
 }

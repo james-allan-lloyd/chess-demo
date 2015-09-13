@@ -5,29 +5,25 @@
 Queen::Queen(ChessBoardModel* parent)
     : Piece("Queen", parent)
 {
-
-}
-
-bool Queen::isValidMove(QPoint a) const
-{
-    return validMoves_.contains(a);
 }
 
 
-void Queen::recalculateMoves()
+QSet<QPoint> Queen::recalculateMoves()
 {
-    validMoves_.clear();
+    QSet<QPoint> result;
+    result.clear();
 
-    projectMovement(-1, 0, validMoves_);  // horizontal left
-    projectMovement(1, 0, validMoves_);   // horizontal right
+    projectMovement(-1, 0, result);  // horizontal left
+    projectMovement(1, 0, result);   // horizontal right
 
-    projectMovement(0, -1, validMoves_);  // vertical up
-    projectMovement(0, 1, validMoves_);   // vertical down
+    projectMovement(0, -1, result);  // vertical up
+    projectMovement(0, 1, result);   // vertical down
 
-    projectMovement(-1, -1, validMoves_); // left, top
-    projectMovement(-1, 1, validMoves_);  // left, bottom
-    projectMovement(1, -1, validMoves_); // right, top
-    projectMovement(1, 1, validMoves_);  // right, bottom
+    projectMovement(-1, -1, result); // left, top
+    projectMovement(-1, 1, result);  // left, bottom
+    projectMovement(1, -1, result); // right, top
+    projectMovement(1, 1, result);  // right, bottom
 
-    Q_ASSERT(!validMoves_.contains(position()));
+    Q_ASSERT(!result.contains(position()));
+    return result;
 }

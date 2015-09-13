@@ -6,20 +6,11 @@
 
 class Queen : public Piece
 {
-    QSet<QPoint> validMoves_;
 public:
     Queen(ChessBoardModel* parent);
 
-signals:
-
-public slots:
-
-    // Piece interface
-public:
-    bool isValidMove(QPoint a) const override;
-
 protected:
-    void recalculateMoves() override;
+    QSet<QPoint> recalculateMoves() override;
 };
 
 #endif // QUEEN_H

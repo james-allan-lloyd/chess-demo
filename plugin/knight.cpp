@@ -13,14 +13,9 @@ Knight::Knight(ChessBoardModel* parent)
     knightVectors_.append(QPoint( 2,  1));
 }
 
-bool Knight::isValidMove(QPoint a) const
+QSet<QPoint> Knight::recalculateMoves()
 {
-    return validMoves_.contains(a);
-}
-
-void Knight::recalculateMoves()
-{
-    validMoves_.clear();
+    QSet<QPoint> result;
     foreach(QPoint p, knightVectors_)
     {
         QPoint targetPoint = position() + p;
@@ -35,6 +30,8 @@ void Knight::recalculateMoves()
             continue;
         }
 
-        validMoves_.insert(targetPoint);
+        result.insert(targetPoint);
     }
+
+    return result;
 }

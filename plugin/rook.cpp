@@ -6,17 +6,13 @@ Rook::Rook(ChessBoardModel* parent)
 
 }
 
-bool Rook::isValidMove(QPoint a) const
+QSet<QPoint> Rook::recalculateMoves()
 {
-    return validMoves_.contains(a);
-}
-
-void Rook::recalculateMoves()
-{
-    validMoves_.clear();
-    projectMovement(-1, 0, validMoves_);
-    projectMovement(1, 0, validMoves_);  // horizontal
-    projectMovement(0, -1, validMoves_);
-    projectMovement(0, 1, validMoves_);  // vertical
+    QSet<QPoint> result;
+    projectMovement(-1, 0, result);
+    projectMovement(1, 0, result);  // horizontal
+    projectMovement(0, -1, result);
+    projectMovement(0, 1, result);  // vertical
+    return result;
 }
 

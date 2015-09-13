@@ -6,14 +6,9 @@ King::King(ChessBoardModel* parent)
 
 }
 
-bool King::isValidMove(QPoint a) const
+QSet<QPoint> King::recalculateMoves()
 {
-    return validMoves_.contains(a);
-}
-
-void King::recalculateMoves()
-{
-    validMoves_.clear();
+    QSet<QPoint> result;
     for(int y=-1; y<=1; ++y)
     {
         for(int x=-1; x<=1; ++x)
@@ -25,9 +20,11 @@ void King::recalculateMoves()
                 if(!occupied || occupied->color() != color())
                 {
                     // don't add self move
-                    validMoves_.insert(p);
+                    result.insert(p);
                 }
             }
         }
     }
+
+    return result;
 }

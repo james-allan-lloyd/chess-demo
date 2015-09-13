@@ -9,7 +9,6 @@ uri = com.luxoft.Chess
 # Input
 SOURCES += \
     plugin_plugin.cpp \
-    chess.cpp \
     chessboardmodel.cpp \
     piece.cpp \
     pawn.cpp \
@@ -22,7 +21,6 @@ SOURCES += \
 
 HEADERS += \
     plugin_plugin.h \
-    chess.h \
     chessboardmodel.h \
     piece.h \
     pawn.h \

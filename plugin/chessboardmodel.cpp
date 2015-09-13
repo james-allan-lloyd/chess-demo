@@ -7,6 +7,8 @@
 #include "knight.h"
 #include "king.h"
 
+#include <QDebug>
+
 ChessBoardModel::ChessBoardModel(QObject* parent)
     : QAbstractListModel(parent)
     , cells_(64, NULL)
@@ -42,8 +44,17 @@ const Piece* ChessBoardModel::cell(QPoint p) const
     return cells_[p.x() + p.y() * 8];
 }
 
+Piece*ChessBoardModel::cell(int x, int y)
+{
+    return cell(QPoint(x, y));
+}
+
 void ChessBoardModel::removePiece(Piece* piece)
 {
+    if(!piece)
+    {
+        return;
+    }
     int index = piece->index();
     Q_ASSERT(cells_[piece->index()] != NULL);
     cells_[piece->index()] = NULL;
@@ -109,7 +120,7 @@ bool ChessBoardModel::movePiece(Piece* piece, QPoint position)
     piece->setPosition(position);
     foreach(Piece* otherPiece, pieces_)
     {
-        otherPiece->recalculateMoves();
+        otherPiece->update();
     }
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));
     return true;
@@ -124,7 +135,7 @@ Piece* ChessBoardModel::create(QString name, int x, int y, ChessBoardModel::Piec
     }
     if(!pieceFactory_.contains(name.toLower()))
     {
-        // unknown key type
+        qWarning() << "Unknown piece type" << name;
         return NULL;
     }
     int index = x + y * 8;
@@ -140,7 +151,7 @@ Piece* ChessBoardModel::create(QString name, int x, int y, ChessBoardModel::Piec
     cells_[piece->index()] = piece;
     foreach(Piece* otherPiece, pieces_)
     {
-        otherPiece->recalculateMoves();
+        otherPiece->update();
     }
 
     pieces_.insert(piece);
