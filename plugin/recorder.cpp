@@ -467,7 +467,7 @@ public:
         ChessBoardModel::PieceColor col = colorFromString(color);
 
         MoveAction* moveAction = new MoveAction(name, x, y, destX, destY, col, hadMoved);
-        if(xml.readNextStartElement())
+        while(xml.readNextStartElement())
         {
             if(xml.name() == "takes")
             {
@@ -477,10 +477,11 @@ public:
                 ChessBoardModel::PieceColor takenCol = colorFromString(color);
                 moveAction->setTakenPiece(takenName, takenCol, takenHasMoved);
             }
-            xml.skipCurrentElement();
+
+            xml.skipCurrentElement(); //  don't recurse any deeper thanks.
         }
+
         historyList_.append(moveAction);
-        xml.skipCurrentElement();
         return true;
     }
 };

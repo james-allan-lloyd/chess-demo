@@ -73,7 +73,7 @@ Window {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 visible: root.state == "main" || root.state == "replaying"
-                onClicked: loadFileDialog.visible = true
+                onClicked: loadGame("file:///C:/Users/James/Documents/test.chess") // FileDialog.visible = true
             }
 
         }
