@@ -40,7 +40,6 @@ Rectangle {
         clip: true
         Repeater {
             id: cells
-            property int selectedIndex: -1;
             model: boardview.model ? boardview.model : boardview.rows * boardview.columns
             Rectangle {
                 property var validMoveDisplay: validMoveDisplay
@@ -80,26 +79,7 @@ Rectangle {
                 MouseArea {
                     anchors.fill: parent
                     enabled: model != null
-                    onClicked: {
-                        if (boardview.selectedPiece == null)
-                        {
-                            if(modelData)
-                            {
-                                if((modelData.isBlack && currentPlayer == "black")
-                                  || (modelData.isWhite && currentPlayer == "white"))
-                                {
-                                    boardview.selectedPiece = modelData
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if(boardview.selectedPiece.isValidMove(Qt.point(cellX, cellY)))
-                            {
-                                selectedPieceDisplay.moveTo(cellX, cellY)
-                            }
-                        }
-                    }
+                    onClicked: mouseClicked(modelData, cellX, cellY)
                 }
             }
         }
@@ -108,6 +88,29 @@ Rectangle {
             id: selectedPieceDisplay
             boardView: boardview
             onMoveCompleted: completeMove(cellX, cellY)
+        }
+    }
+
+
+    function mouseClicked(piece, cellX, cellY)
+    {
+        if (boardview.selectedPiece == null)
+        {
+            if(piece)
+            {
+                if((piece.isBlack && currentPlayer == "black")
+                        || (piece.isWhite && currentPlayer == "white"))
+                {
+                    boardview.selectedPiece = piece
+                }
+            }
+        }
+        else
+        {
+            if(boardview.selectedPiece.isValidMove(Qt.point(cellX, cellY)))
+            {
+                selectedPieceDisplay.moveTo(cellX, cellY)
+            }
         }
     }
 

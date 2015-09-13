@@ -22,10 +22,17 @@ Item {
         anchors.centerIn: parent
     }
 
+    function distance()
+    {
+        var a = (path.startX - pathEnd.x)
+        var b = (path.startY - pathEnd.y)
+        return Math.sqrt(a*a + b*b)
+    }
+
     PathAnimation {
         id: pathAnim
 
-        duration: sqrt((path.startX - pathEnd.x) + (path.startY - pathEnd.y)) * 10;
+        duration: distance() * 5;
         easing.type: Easing.OutQuad
         easing.overshoot: 10
 
