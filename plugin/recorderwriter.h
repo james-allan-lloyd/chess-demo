@@ -14,8 +14,8 @@ class Recorder::Writer : public QObject
 public:
     Writer(const QString& filename);
 
-    const QString filename() const;
-    void write(const QList<Action*>& actions);
+    const QString& filename() const;
+    bool write(const QList<Action*>& actions);
 
 private:
     void clear();

@@ -44,7 +44,6 @@ QPoint Piece::position() const
 void Piece::setPosition(const QPoint& p)
 {
     position_ = p;
-    update();
     positionChanged(p);
 }
 

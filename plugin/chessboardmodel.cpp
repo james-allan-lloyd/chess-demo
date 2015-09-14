@@ -148,13 +148,13 @@ Piece* ChessBoardModel::create(QString name, int x, int y, ChessBoardModel::Piec
     Piece* piece = pieceFactory_.value(name.toLower())();
     piece->setColor(color);
     piece->setPosition(QPoint(x,y));
+    pieces_.insert(piece);
     cells_[piece->index()] = piece;
     foreach(Piece* otherPiece, pieces_)
     {
         otherPiece->update();
     }
 
-    pieces_.insert(piece);
     emit dataChanged(createIndex(index, 0), createIndex(index, 0));
     return piece;
 }

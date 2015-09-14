@@ -156,7 +156,6 @@ void Recorder::setModel(ChessBoardModel* model)
 bool Recorder::save(const QString& filename)
 {
     QString fileNameFromUrl = QUrl(filename).toLocalFile();
-    qDebug() << "Save: " << fileNameFromUrl << ", originally:" << filename;
     Writer writer(fileNameFromUrl);
     writer.write(actions_);
     return true;

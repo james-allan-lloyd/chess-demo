@@ -10,12 +10,12 @@ Recorder::Writer::Writer(const QString& filename)
 {
 }
 
-const QString Recorder::Writer::filename() const
+const QString& Recorder::Writer::filename() const
 {
     return filename_;
 }
 
-void Recorder::Writer::write(const QList<Action*>& actions)
+bool Recorder::Writer::write(const QList<Action*>& actions)
 {
     doc_.clear();
     QDomElement chess = doc_.createElement("chess");
@@ -30,8 +30,9 @@ void Recorder::Writer::write(const QList<Action*>& actions)
     if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         qWarning() << "Not able to save doc";
-        return;
+        return false;
     }
     QTextStream textStream(&file);
     doc_.save(textStream, 4);
+    return true;
 }
