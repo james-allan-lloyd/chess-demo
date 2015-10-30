@@ -4,7 +4,7 @@ QT += qml quick xml
 CONFIG += qt plugin c++11
 
 TARGET = $$qtLibraryTarget($$TARGET)
-uri = com.luxoft.Chess
+uri = com.vividcode.Chess
 
 # Input
 SOURCES += \

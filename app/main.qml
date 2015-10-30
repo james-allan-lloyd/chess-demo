@@ -2,7 +2,7 @@ import QtQuick 2.3
 import QtQuick.Layouts 1.1
 import QtQuick.Window 2.2
 import QtQuick.Dialogs 1.0
-import com.luxoft.Chess 1.0 as Chess
+import com.vividcode.Chess 1.0 as Chess
 
 Window {
     id: root

@@ -7,7 +7,7 @@
 
 void PluginPlugin::registerTypes(const char *uri)
 {
-    // @uri com.luxoft.Chess
+    // @uri com.vividcode.Chess
     qmlRegisterType<ChessBoardModel>(uri, 1, 0, "BoardModel");
     qmlRegisterType<Recorder>(uri, 1, 0, "Recorder");
     qmlRegisterInterface<Piece>("Piece");

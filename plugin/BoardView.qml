@@ -1,5 +1,5 @@
 import QtQuick 2.0
-import com.luxoft.Chess 1.0 as Chess
+import com.vividcode.Chess 1.0 as Chess
 
 
 Rectangle {
